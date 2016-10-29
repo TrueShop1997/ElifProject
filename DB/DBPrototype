@@ -1,0 +1,31 @@
+collection `Users`:
+{
+ "id": String,
+ "email": String,
+ "password": String,
+ "phoneNumber": Number,
+ "address": String,
+ "firstName": String,
+ "lastName": String,
+ "cards": Array of objects || strings?,
+ "orderedProducts": [
+   {
+     "id": String,
+     "isDelivered": Boolean
+   },
+   ...
+ ],
+
+"productsInCart": Array of strings
+}
+
+ 
+collection `Admins`:
+{
+ "id": String,
+ "email": String,
+ "password": String,
+ "firstName": String,
+ "lastName": String,
+ "rightsLevel": Number
+}
