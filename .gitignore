@@ -1,19 +1,11 @@
-<<<<<<< HEAD
 nbproject
 npm-debug.log
 node_modules
-<<<<<<< HEAD
 .sass-cache
-.idea
-=======
-.sass-cache
->>>>>>> 11b84ca096e6321c46e885413d4a87a2c4afcfda
-=======
 .idea/
 node_modules/
 dist/
 *.iml
 webpack-assets.json
 webpack-stats.json
-npm-debug.log
->>>>>>> 565afb92e670d00305021ae5c1a25c044cdb4640
+
