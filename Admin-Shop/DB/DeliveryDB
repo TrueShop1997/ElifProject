@@ -1,0 +1,43 @@
+DB: db_delivery
+collection: "Cars"
+{
+    "_id": {
+        "$oid": "58204ca7dcba0f6bf264c360"
+    },
+    "orders": [
+        "delivery_id"
+    ],
+    "car_number": "String",
+    "car_driver": "String",
+    "free_date": "Date"
+}
+collection: "Deliveries"
+{
+    "_id": {
+        "$oid": "58204b47dcba0f6bf264c2aa"
+    },
+    "order_id": "String",
+    "customer_id": "String",
+    "delivery_date": "Date",
+    "adress": "String",
+    "phone": "Number",
+    "delivery_status": "Boolean",
+    "car": "car_id",
+    "loc_from": "String",
+    "loc_to": "String"
+}
+
+comes from Admin:
+Colection: "Orders"
+{
+    "_id": {
+        "$oid": "68204b47dcba0f6bf264c8aa"
+    },
+    "product_id": "String",
+    "amount": "Number",
+    "customer_id": "String",
+    "order_data": "Data",
+    "adress": "String",
+    "payment_status": "Bollean",
+    "order_status": "Boolean"
+}
