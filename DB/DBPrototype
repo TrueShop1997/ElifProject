@@ -1,63 +1,89 @@
 collection Users:
 {
-  "id": String,
+  "_id",
   "email": String,
   "password": String,
   "phoneNumber": Number,
   "address": String,
   "firstName": String,
   "lastName": String,
-  "cards": Array of objects || strings?,
-  "orderedProducts": [
-    {
-      "id": String,
-      "isDelivered": Boolean
-    },
-    ...
-  ],
-  "productsInCart": Array of strings
-}
-
-collection Admins:
-{
-  "id": String,
-  "email": String,
-  "password": String,
-  "firstName": String,
-  "lastName": String,
-  "rightsLevel": Number
+  "cards": Array of objects,
+  "isAdmin": Boolean
 }
 
 collection Categories:
 {
-  "id": String,
+  "_id",
+  "parentId",
   "name": String,
-  "products": [
+  "properties": [
     {
-      "id": String,
-      "name": String,
-      "price": Number,
-      "inStock": Number,
-      "images": Array of strings,
-      "дата випуску/дата з'явлення в шопі": Date,
-      "snippet": String,
-      "description": String,
-      "additionalFeatures": String,
-      "os": Object || String,
-
-      ...to be added
-
-      далі йдуть усілякі параметри (всі ці властивості будуть швидше за все об'єктами):
-      "battery",
-      "hardware",
-      "display",
-      "розміри + вага",
-      "пам'ять",
-      ...
-      ну і вже ситуативне для кожного типу продукту,
-      аля камера і тд.
+      "name": "os"
+    },
+    {
+      "name": "battery"
+    },
+    {
+      "name": "hardware"
+    },
+    {
+      "name": "display"
+    },
+    {
+      "name": "sizeAndWeight"
+    },
+    {
+      "name": "memory"
     },
     ...
-  ],
-  "subCategories": Array of same objects
+  ]
+}
+
+collection Products:
+{
+  "_id",
+  "categoryId",
+  "name": String,
+  "price": Number,
+  "inStock": Number,
+  "images": Array of strings,
+  "дата випуску/дата з'явлення в шопі": Date,
+  "snippet": String,
+  "description": String,
+  "additionalFeatures": String,
+  "properties": [
+    {
+      "name": "os",
+      "value": Object
+    },
+    {
+      "name": "battery",
+      "value": Object
+    },
+    {
+      "name": "hardware",
+      "value": Object
+    },
+    {
+      "name": "display",
+      "value": Object
+    },
+    {
+      "name": "sizeAndWeight",
+      "value": Object
+    },
+    {
+      "name": "memory",
+      "value": Object
+    },
+    ...
+  ]
+}
+
+collection Orders:
+{
+  "_id",
+  "userId",
+  "productId",
+  "status": 'IN_CART' || 'PAID' || 'DELIVERING' || 'DELIVERED'
 }
