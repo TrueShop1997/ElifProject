@@ -1,7 +1,11 @@
+nbproject
+npm-debug.log
+node_modules
+.sass-cache
 .idea/
 node_modules/
 dist/
 *.iml
 webpack-assets.json
 webpack-stats.json
-npm-debug.log
+

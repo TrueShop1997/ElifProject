@@ -53,7 +53,6 @@ export default (store) => {
       <Route path="widgets" component={Widgets}/>
 
       <Route path="orders" component={Orders}/>
-
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />
     </Route>

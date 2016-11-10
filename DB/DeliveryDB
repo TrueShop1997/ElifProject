@@ -1,0 +1,25 @@
+DB: db_delivery
+collection: "Cars"
+{
+    "_id": {
+        "$oid": "58204ca7dcba0f6bf264c360"
+    },
+    "orders": [
+        "delivery_id"
+    ],
+    "carNumber": "String",
+    "carDriver": "String",
+    "freeDate": "Date"
+}
+collection: "Deliveries"
+{
+    "_id": {
+        "$oid": "58204b47dcba0f6bf264c2aa"
+    },
+    "orderId": "String",
+    "deliveryDate": "Date",
+    "deliveryStatus": "Enum",
+    "car": "carId",
+    "locFrom": "String",
+    "locTo": "String"
+}

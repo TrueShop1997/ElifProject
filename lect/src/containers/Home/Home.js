@@ -23,7 +23,6 @@ export default class Home extends Component {
 
             <h2>{config.app.description}</h2>
             <Hello />
-
             <p>
               <a className={styles.github} href="https://github.com/erikras/react-redux-universal-hot-example"
                  target="_blank">

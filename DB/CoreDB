@@ -1,0 +1,89 @@
+collection Users:
+{
+  "_id",
+  "email": String,
+  "password": String,
+  "phoneNumber": Number,
+  "address": String,
+  "firstName": String,
+  "lastName": String,
+  "cards": Array of objects,
+  "isAdmin": Boolean
+}
+
+collection Categories:
+{
+  "_id",
+  "parentId",
+  "name": String,
+  "properties": [
+    {
+      "name": "os"
+    },
+    {
+      "name": "battery"
+    },
+    {
+      "name": "hardware"
+    },
+    {
+      "name": "display"
+    },
+    {
+      "name": "sizeAndWeight"
+    },
+    {
+      "name": "memory"
+    },
+    ...
+  ]
+}
+
+collection Products:
+{
+  "_id",
+  "categoryId",
+  "name": String,
+  "price": Number,
+  "inStock": Number,
+  "images": Array of strings,
+  "дата випуску/дата з'явлення в шопі": Date,
+  "snippet": String,
+  "description": String,
+  "additionalFeatures": String,
+  "properties": [
+    {
+      "name": "os",
+      "value": Object
+    },
+    {
+      "name": "battery",
+      "value": Object
+    },
+    {
+      "name": "hardware",
+      "value": Object
+    },
+    {
+      "name": "display",
+      "value": Object
+    },
+    {
+      "name": "sizeAndWeight",
+      "value": Object
+    },
+    {
+      "name": "memory",
+      "value": Object
+    },
+    ...
+  ]
+}
+
+collection Orders:
+{
+  "_id",
+  "userId",
+  "productId",
+  "status": 'IN_CART' || 'PAID' || 'DELIVERING' || 'DELIVERED'
+}
