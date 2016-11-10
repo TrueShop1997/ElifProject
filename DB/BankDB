@@ -8,11 +8,11 @@ user{
   'password' : String,
   'cards'    : [
     {
-      'number' : Number,
-      'pin'    : Number,
-      'cvv'    : Number,
-      'balance': Number,
-      'owner'  : ObjectId
+      'number'  : Number,
+      'pin'     : Number,
+      'cvv'     : Number,
+      'explDate': Date,
+      'owner'   : ObjectId
     }
   ]
 }
