@@ -1,0 +1,26 @@
+.loginPage {
+  div {
+    text-align: center;
+    margin: 0 auto;
+  }
+  input {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  form {
+    margin: 30px 0;
+    :global(.btn) {
+      margin-left: 10px;
+    }
+  }
+}
+
+.btnFacebook {background: #3b5998;}
+.btnTwitter {background: #00aced;}
+.btnGoogle {background: #c32f10;}
+
+.blockMedia {
+  text-align: center;
+  margin: auto;
+}
