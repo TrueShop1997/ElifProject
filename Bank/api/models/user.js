@@ -1,21 +1,16 @@
 import mongoose from 'mongoose';
+import {Card, CardSchema} from './card';
 
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   firstName: {type: String, required: true},
   lastName : {type: String, required: true},
-  eMail    : {type: String, required: true},
+  email    : {type: String, required: true},
   password : {type: String, required: true},
-  cards    : [
-    {
-      number : {type: Number },
-      pin    : {type: Number },
-      balance: {type: Number },
-      owner  : {type: Schema.ObjectId}
-    }
-  ]
+  cards    : [CardSchema]
+
 });
 
-export const User = mongoose.model("User", UserSchema);
+export const User = mongoose.model('users', UserSchema);
 

@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import { SignUpForm } from 'components';
 import { LoginForm } from 'components';
 import { WelcomeButtons } from 'components';
-import {addNewUser} from 'redux/modules/signUp';
+import { createNewUser } from 'redux/modules/signUp';
 
 @connect(
   (state) => ({... state.welcomeButtons}),
@@ -17,7 +17,7 @@ export default class Home extends Component {
   };
 
   handleSubmit = (data) => {
-    addNewUser(data);
+    createNewUser(data);
     console.log('Data submitted! ' + JSON.stringify(data));
   };
 

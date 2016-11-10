@@ -1,13 +1,41 @@
-.chat {
-  input {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+.widgets {
+  .pull-right {
+    float: right !important;
   }
-  form {
-    margin: 30px 0;
+  .col-md-4 {
+    color: #adadad;
+  }
+  .refreshBtn {
+    margin-left: 20px;
+  }
+  .idCol {
+    width: 5%;
+  }
+  .colorCol {
+    width: 20%;
+  }
+  .sprocketsCol {
+    width: 20%;
+    text-align: right;
+    input {
+      text-align: right;
+    }
+  }
+  .ownerCol {
+    width: 30%;
+  }
+  .buttonCol {
+    width: 25%;
     :global(.btn) {
-      margin-left: 10px;
+      margin: 0 5px;
+    }
+  }
+  tr.saving {
+    opacity: 0.8;
+    :global(.btn) {
+      &[disabled] {
+        opacity: 1;
+      }
     }
   }
 }
