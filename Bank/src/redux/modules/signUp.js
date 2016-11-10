@@ -44,10 +44,10 @@ export function isValidEmail(data) {
   };
 }
 
-export function addNewUser(user) {
+export function createNewUser(user) {
   return {
     types: ADD_NEW_USER,
-    promise: (client) => client.post('/addUser', {
+    promise: (client) => client.post('/createNewUser', {
       data: {
         user: user,
       }

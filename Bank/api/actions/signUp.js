@@ -1,22 +1,23 @@
-import mongoose from 'mongoose';
+import {User} from '../models';
 
-import '../models/user';
-
-const User = mongoose.model('User');
-
-
-export default function addNewUser(req) {
-  console.log('addNewUser start');
+export default function createNewUser(req) {
   return new Promise((resolve, reject) => {
     // write to database
     setTimeout(() => {
-      load(req).then(data => {
-        const user = req.body;
-        req.session.user = user;
-        resolve(user);
-      }, err => {
-        reject(err);
+      //const user = new User(req.body);
+      const user = new User({
+        firstName: req.body.name,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: req.body.pass,
+        cards: []
       });
+      user.save();
+      resolve('alright');
+      reject('very bad');
+      console.log('addUser end');
     }, 1500); // simulate async db write
   });
 }
+
+

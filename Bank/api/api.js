@@ -15,7 +15,14 @@ const app = express();
 
 const server = new http.Server(app);
 
-const mongoUrl = "localhost:27017/BankDB";
+const mongoUrl = 'mongodb://localhost:27017/BankDB'; //local
+
+// const mongoUrl = 'mongodb://forBank:1bankPass@ds143777.mlab.com:43777/bank_db'; // mLab
+//const mongoUrl = 'mongodb://${config.db.user}:${config.db.pass}@${config.db.host}:{config.db.port}/{config.db.name}';
+
+
+//console.log(mongoUrl);
+
 
 mongoose.connect(mongoUrl, (err) => {
   if (err) {
