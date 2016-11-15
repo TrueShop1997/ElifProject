@@ -17,9 +17,9 @@ export default class AddProductToCartButton extends Component {
   handleOnClick = () => {
     const productId = '123'; // hardcoded "productId"
     const userId = '345'; // hardcoded "userId"
-    const count = 2; // hardcoded "count"
+    const quantity = 2; // hardcoded "quantity"
 
-    this.props.addProductToCart({ userId, productId, count });
+    this.props.addProductToCart({ userId, productId, quantity });
   }
 
   render() {

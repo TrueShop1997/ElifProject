@@ -1,21 +1,26 @@
 import Order from '../models/order';
+import Product from '../models/product';
 
 export default function addProductToCart(req) {
   return new Promise((resolve, reject) => {
-    const { userId, productId, count } = req.body;
-    const newOrder = {
+    const { userId, productId, quantity } = req.body;
+    Order.create({
       userId,
-      productId,
-      count,
+      products: [{
+        productId,
+        quantity
+      }],
+      date: {
+        created: new Date(),
+        paid: '',
+        delivered: ''
+      },
       status: 'IN_CART'
-    };
-
-    Order.create(newOrder, (err, order) => {
-      if (err) {
-        reject('creating order error');
-      } else {
-        resolve(order);
-      }
     })
+    .then(order => Order.populate(order, { path: 'products.productId', select: 'name price' }))
+    .then(
+      order => resolve({ order: order, total: order.findTotal() }),
+      error => reject(error)
+    );
   });
 }

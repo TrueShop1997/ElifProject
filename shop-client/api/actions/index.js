@@ -7,3 +7,4 @@ export * as survey from './survey/index';
 export * as signup from './signup/index';
 export * as signin from './signin/index';
 export addProductToCart from './addProductToCart';
+export payOrder from './payOrder';
