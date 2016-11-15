@@ -13,8 +13,9 @@ const SHOW_ADD_FORM = '/cards/SHOW_ADD_FORM';
 const initialState = {
   loaded: false,
   review: false,
-  showAddForm: true,
-  saveError: {}
+  saveError: {},
+  showAddForm: false,
+  showCardView: false,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -32,7 +33,8 @@ export default function reducer(state = initialState, action = {}) {
     case LOAD:
       return {
         ...state,
-        loading: true
+        loading: true,
+        data: action.result
       };
     case LOAD_SUCCESS:
       return {
@@ -77,27 +79,27 @@ export default function reducer(state = initialState, action = {}) {
     case SAVE:
       return state; // 'saving' flag handled by redux-form
     case SAVE_SUCCESS:
-      const data = [...state.data];
-      data[action.result.id - 1] = action.result;
+      // const data = [...state.data];
+      // data[action.result.id - 1] = action.result;
       return {
         ...state,
-        data: data,
-        editing: {
-          ...state.review,
-          [action.id]: false
-        },
-        saveError: {
-          ...state.saveError,
-          [action.id]: null
-        }
+        //  data: data,
+        // editing: {
+        //   ...state.review,
+        //   [action.id]: false
+        // },
+        // saveError: {
+        //   ...state.saveError,
+        //   [action.id]: null
+        // }
       };
     case SAVE_FAIL:
       return typeof action.error === 'string' ? {
         ...state,
-        saveError: {
-          ...state.saveError,
-          [action.id]: action.error
-        }
+        // saveError: {
+        //   ...state.saveError,
+        //   [action.id]: action.error
+        // }
       } : state;
     default:
       return state;
@@ -108,19 +110,19 @@ export function isLoaded(globalState) {
   return globalState.cards && globalState.cards.loaded;
 }
 
-export function load() {
+export function getCards() {
   return {
     types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
-    promise: (client) => client.get('/cards/getAllCards')
+    promise: (client) => client.get('/cards/getCards')
   };
 }
 
-export function save(card) {
+export function createCard(card) {
+  console.log('In modules/createCard');
   return {
     types: [SAVE, SAVE_SUCCESS, SAVE_FAIL],
-    promise: (client) => client.post('/cards/addNewCard', {
-      data: card
-    })
+    promise: (client) => client.post('/cards/addNewCard',
+  {data: card})
   };
 }
 
@@ -138,9 +140,9 @@ export function reviewCard(cardId) {
   };
 }
 
-export function addButton(showForm) {
+export function addButton(showAddForm) {
   return {
     type: SHOW_ADD_FORM,
-    showForm
+    showAddForm
   };
 }

@@ -23,7 +23,7 @@ const mongoUrl = 'mongodb://localhost:27017/BankDB'; //local
 
 //console.log(mongoUrl);
 
-
+mongoose.Promise = global.Promise;
 mongoose.connect(mongoUrl, (err) => {
   if (err) {
     console.log('Please make sure MongoDb is up and running');

@@ -8,17 +8,14 @@ import { WelcomeButtons } from 'components';
 import { createNewUser } from 'redux/modules/signUp';
 
 @connect(
-  (state) => ({... state.welcomeButtons}),
+  (state) => ({... state.welcomeButtons,
+    signUp: createNewUser}),
 )
 export default class Home extends Component {
   static propTypes = {
     showLoginForm: PropTypes.bool,
     showSignUpForm: PropTypes.bool,
-  };
-
-  handleSubmit = (data) => {
-    createNewUser(data);
-    console.log('Data submitted! ' + JSON.stringify(data));
+    createNewUser: PropTypes.func
   };
 
   render() {
@@ -47,7 +44,7 @@ export default class Home extends Component {
             </div>}
 
             {showSignUpForm && <div>
-              < SignUpForm onSubmit={this.handleSubmit} />
+              < SignUpForm />
             </div>}
 
           </div>

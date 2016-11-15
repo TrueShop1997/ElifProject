@@ -6,3 +6,4 @@ export * as widget from './widget/index';
 export * as survey from './survey/index';
 export createNewUser from './signUp';
 export * as cards from './cards';
+// export addNewCard from './cards';

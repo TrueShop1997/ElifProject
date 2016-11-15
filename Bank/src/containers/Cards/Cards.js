@@ -1,9 +1,12 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import { asyncConnect } from 'redux-async-connect';
-import {isLoaded, load as loadCards} from 'redux/modules/cards';
-// import {isLoaded, load as loadCards} from 'redux/modules/cards';
+import {isLoaded, createCard, getCards as loadCards} from 'redux/modules/cards';
 import Helmet from 'react-helmet';
+import {initializeWithKey} from 'redux-form';
+import {initialize} from 'redux-form';
+import * as cardsActions from 'redux/modules/cards';
+import {AddCardForm} from 'components';
 
 @asyncConnect([{
   deferred: true,
@@ -16,46 +19,49 @@ import Helmet from 'react-helmet';
 @connect(
   state => ({
     cards: state.cards.data,
-    error: state.cards.error,
-    review: state.cards.review,
+    review: state.widgets.review,
+    error: state.widgets.error,
     loading: state.cards.loading,
+    showAddForm: state.cards.showAddForm,
+    addButton: state.cards.addButton,
+    createCard: state.cards.createCard,
   }),
-  //{addButton}
- // {...cards}
-)
+  {...cardsActions, initialize, initializeWithKey })
 export default class Cards extends Component {
   static propTypes = {
+    initialize: PropTypes.func.isRequired,
     cards: PropTypes.array,
-    error: PropTypes.string,
-    loading: PropTypes.bool,
-    load: PropTypes.func.isRequired,
-    reviewCard: PropTypes.func,
+    // reviewCard: PropTypes.func,
     showAddForm: PropTypes.bool,
-    addButton: PropTypes.func
+    createCard: PropTypes.func,
+    addButton: PropTypes.func,
+    // load: PropTypes.func.isRequired,
+    initializeWithKey: PropTypes.func.isRequired,
+    loading: PropTypes.bool,
+    error: PropTypes.string
+  };
+
+  handleSubmit = (data) => {
+    createCard(data);
+    console.log('now in Cards, after createCard()');
   };
 
   render() {
     const style = require('./Cards.scss');
-    const {addButton, cards} = this.props;
-
-    console.log(cards + 'loaded' + isLoaded);
-
-    const handleReview = (card) => {
-      const {reviewCard} = this.props; // eslint-disable-line no-shadow
-      return () => reviewCard(String(card));
-    };
-    const {showAddForm} = this.props;
-    // const addButton = (card) => {
-    //   const {reviewCard} = this.props; // eslint-disable-line no-shadow
-    //   return () => reviewCard(String(card));
-    // };
+    const {cards, addButton, showAddForm} = this.props;
 
     return (
       <div className={style.widgets + ' container'}>
         <Helmet title="Cards"/>
         <h1 className={style}>My Cards</h1>
+        <div>
+          <button className="btn btn-primary" onClick={() => addButton(!showAddForm)}>
+            Add new card
+          </button>
+        </div>
         <div className="row">
-          <div className="col-md-4">
+          <div className="col-md-5">
+            {cards && cards.length &&
             <table className="table table-hover">
               <thead>
               <tr>
@@ -68,31 +74,24 @@ export default class Cards extends Component {
               <tbody>
               {
                 cards.map((card) =>
-                  <tr key={card.id}>
-                    <td className={style.idCol}>visa</td>
-                    <td className={style.colorCol}>{card.number}</td>
-                    <td className={style.sprocketsCol}>balance</td>
-                    <td className={style.buttonCol}>
-                      <button className="btn btn-primary btn-sm" onClick={handleReview(card.id)}>
-                        <i className="fa fa-credit-card"/>
+                  <tr key={card._id}>
+                    <td className={style.idCol} >{card.name}</td>
+                    <td className={style.colorCol} >{card.number}</td>
+                    <td className={style.ownerCol} >{card.cvv}</td>
+                    <td className={style.buttonCol} >
+                      <button key={card.id} className="btn btn-info btn-sm">
+                        <i className="fa fa-credit-card"/> select
                       </button>
                     </td>
                   </tr>)
               }
               </tbody>
-            </table>
+            </table> }
           </div>
-          <div className="col-md-8 pull-right">
-            <button className="btn btn-primary" onClick={() => addButton(!showAddForm)}>
-              Add new card
-            </button>
+          <div className="col-md-7 pull-right">
 
-
-                <div className="btn-group">
-                  <button type="button" className="btn btn-success">Add Mastercard</button>
-                  <button type="button" className="btn btn-success">Add VISA</button>
-
-                </div>
+            { showAddForm &&
+              <AddCardForm onSubmit={this.handleSubmit}/>}
 
           </div>
         </div>

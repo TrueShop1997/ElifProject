@@ -1,55 +1,82 @@
 import mongoose from 'mongoose';
-// import generator from 'creditcard-generator';
-import {Card, CardSchema} from '../models';
-// import {User} from '../models';
+import {User, Card} from '../models';
 
 
-export function getAllCards() {
+export function getCards(req) {  // get
+  const ownerId = mongoose.Types.ObjectId("582361bc6281c1d2d18854a6");
   return new Promise((resolve, reject) => {
-    //const cardsMap = [];
-    const ownerId = mongoose.Types.ObjectId("582361bc6281c1d2d18854a6");
-    //const user = User.findById(id);
-    // user.cards.forEach(function(card) {
-    //   cardsMap.push(card);
-    // });
-    resolve(Card.find({owner : ownerId}));
+    console.log('getCards from actions/cards');
+    setTimeout(() => {
+      let cards = req.session.cards;
+      if (!cards){
+        req.session.cards = cards;
+        resolve(cards = User.findById(ownerId).distinct('cards'));
+      }
+      reject('err');
+    },500);
+  });
+}
+
+export function addNewCard(req) {  // get
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const ownerId = mongoose.Types.ObjectId("582361bc6281c1d2d18854a6"); // temporary
+      console.log('starting addNewCard');
+      getUserById(ownerId).then(data => {
+        const newcard = new Card({
+          number: numberGenerator(req.body.cardType),
+          name: req.body.cardName,
+          pin: getPin(),
+          cvv: getCVV(),
+          explDate: getExplDate(),
+          owner: ownerId
+        });
+        const user = data;
+        user.cards.push(newcard);
+        console.log(newcard + '  is pushed and ready to save');
+        resolve(user.save());
+        reject('err');
+      });
+    }, 1500);
+  });
+}
+
+export function updateCard(req) {  // post
+  return new Promise((resolve, reject) => {
+    User.update(
+      {'cards._id' : req.body._id },
+      {'$set': {
+        'cards.name': req.body.cardName
+      }},
+    );
+    resolve('ok');
     reject('err');
   });
- // return (User.findById(id));
 }
 
-export function deleteCard(cardID){
-  return Card.findById(cardID).remove();
-}
-
-export function addNewCard(type) {
-   return new Promise((resolve, reject) => {
-    const ownerId = mongoose.Types.ObjectId("582361bc6281c1d2d18854a6");
-    //const user = User.findById(id);
-    const card = new Card({
-      _id     : mongoose.Types.ObjectId(),
-      number  : numberGenerator(type),
-      pin     : getPin(),
-      cvv     : getCVV(),
-      explDate: getExplDate(),
-      owner   : ownerId
-    });
-    console.log(card);
-    //user.cards.push(card);
-     // user.cards.push(card)
-     card.save();
+export function deleteCard(req){   // get
+  return new Promise((resolve, reject) => {
+    User.update(
+      {'$pull': {
+        'cards._id' : req.body._id
+      }},
+    );
     resolve('ok');
-    // resolve(user.save());
-    // reject('err');
-    // })
-})
+    reject('err');
+  });
+}
+
+
+function getUserById() {
+  const ownerId = mongoose.Types.ObjectId("582361bc6281c1d2d18854a6");
+  return User.findById(ownerId);
 }
 
 function numberGenerator(type) {
   const visaId = 401997;
   const masterCardId = 551997;
   const cardId = Math.floor(Math.random() * (10000000000 - 999999999)) + 999999999;
-  if(type){
+  if(type === 'VISA'){
     return "" + visaId + cardId;
   } else {
     return "" + masterCardId + cardId;
@@ -69,4 +96,3 @@ function getExplDate() {
   let now = new Date;
   return(new Date(now.getMonth(), now.getFullYear() + 3));
 }
-
