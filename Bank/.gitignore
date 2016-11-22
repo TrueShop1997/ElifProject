@@ -1,6 +1,10 @@
-# Dependency directories
-node_modules
-jspm_packages
+.idea/
+node_modules/
+dist/
+.vscode
+.jsbeautifyrc
+*.iml
+webpack-assets.json
+webpack-stats.json
+npm-debug.log
 
-# Optional npm cache directory
-.npm

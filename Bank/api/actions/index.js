@@ -1,9 +1,8 @@
-export loadInfo from './loadInfo';
 export loadAuth from './loadAuth';
 export login from './login';
 export logout from './logout';
-export * as widget from './widget/index';
-export * as survey from './survey/index';
 export createNewUser from './signUp';
-export * as cards from './cards';
-// export addNewCard from './cards';
+export {getCards, addNewCard, updateCard, deleteCard, countBalance} from './cards';
+export {addTransaction, getTransactions, getOutgoingSum} from './transaction';
+export * as survey from './survey/index';
+
