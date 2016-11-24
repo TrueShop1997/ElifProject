@@ -2,19 +2,17 @@ import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt-as-promised';
 
 const UserSchema = new Schema({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
-    address: { type: String, required: true },
-    email: { type: String, lowercase: true, index: true, unique: true, required: true },
-    password: {type: String, required: true },
-    isAdmin: { type: Boolean, default: false, required: true }
-    /* cards: [{
-      number: {type: String, unique: true},
-      CVV: Number,
-      month: Number,
-      year: number
-    }] */
+    firstName: { type: String },
+    lastName: { type: String },
+    phoneNumber: { type: String, default: '' },
+    address: { type: String, default: '' },
+    email: { type: String, lowercase: true, index: true, unique: true },
+    password: {type: String },
+    isAdmin: { type: Boolean, default: false },
+    isEmailVerified: { type: Boolean, default: false },
+    createdDate: { type: Date, default: Date.now() },
+    facebookId: String
+    // bankAccessToken: String
 });
 
 UserSchema.pre('save', async function (next) {
@@ -28,9 +26,5 @@ UserSchema.pre('save', async function (next) {
     this.password = hash;
     next();
 });
-
-UserSchema.methods.comparePasswords = function (password) {
-    return bcrypt.compare(password, this.password);
-};
 
 export default mongoose.model('User', UserSchema);

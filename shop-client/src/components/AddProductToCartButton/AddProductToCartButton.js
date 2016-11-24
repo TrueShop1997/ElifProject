@@ -15,7 +15,7 @@ export default class AddProductToCartButton extends Component {
   }
 
   handleOnClick = () => {
-    const productId = '123'; // hardcoded "productId"
+    const productId = '582b0108ea52341ad8d333bd'; // hardcoded "productId"
     const userId = '345'; // hardcoded "userId"
     const quantity = 2; // hardcoded "quantity"
 

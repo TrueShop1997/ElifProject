@@ -1,33 +1,22 @@
 import User from '../../models/user';
-import config from '../../../src/config';
 
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt-as-promised';
+import passport from 'passport';
 
 export default function signin(req) {
   return new Promise((resolve, reject) => {
-    const { email, password } = req.body;
-    User.findOne({ email }, (err, user) => {
+    passport.authenticate('local', function(err, user, info) {
       if (err) {
-        throw err;
+        return reject(err); // will generate a 500 error
       }
-      if (!user) {
-        reject({
-          errorMessage: 'User not found'
-        });
-      } else {
-        bcrypt.compare(password, user.password)
-          .then(() => {
-            const token = jwt.sign({ _id: user._id }, config.secret);
-            req.session.user = user;
-            resolve(token);
-          })
-          .catch(bcrypt.MISMATCH_ERROR, () => {
-            reject({
-              errorMessage: 'Bad credentials'
-            });
-          });
+      if (! user) {
+        return resolve({ success : false, message : 'authentication failed' });
       }
-    });
+      req.login(user, loginErr => {
+        if (loginErr) {
+          return reject(loginErr);
+        }
+        return resolve(user);
+      });
+    })(req);
   });
 };

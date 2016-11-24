@@ -6,22 +6,22 @@ export default function signup(req) {
   return new Promise((resolve, reject) => {
     const credentials = req.body;
     // sending email TODO: verification
-    var options = {
+    /* var options = {
       service: 'Gmail',
       auth: {
-        user: 'login',
-        pass: 'pass'
+        user: 'mykola.syniuha',
+        pass: '123456QWERTY'
       }
     };
     var transporter = nodemailer.createTransport(smtpTransport(options));
-    var rand,mailOptions,host,link;
-    rand = Math.floor((Math.random() * 100) + 54);
+    var rand, mailOptions, host, link;
+    rand = Math.floor((Math.random() * 1000) + 5421);
     host = req.get('host');
     link = "http://"+req.get('host')+"/verify?id="+rand;
     mailOptions = {
       to : credentials.email,
       subject : 'Please confirm your Email account',
-      html : 'Hello,<br> Please Click on the link to verify your email.<br><a href='+link+'>Click here to verify</a>'
+      html : 'Hello,' + credentials.firstName + ' ' + credentials.lastName + ', from <b>TrueShop1997</b>. <br> Please Click on the link to verify your email.<br><a href='+link+'>Click here to verify</a>'
     }
     console.log(mailOptions);
     transporter.sendMail(mailOptions, function(error, response) {
@@ -32,7 +32,7 @@ export default function signup(req) {
         console.log("Message sent: " + response.message);
         //res.end("sent");
       }
-    });
+    }); */
     //
     User.create(credentials, (err, user) => {
       if(err) {

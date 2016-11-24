@@ -9,7 +9,7 @@ import Helmet from 'react-helmet';
 import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
 import { isLoaded as isAuthLoaded, load as loadAuth, logout } from 'redux/modules/auth';
 import { InfoBar } from 'components';
-import { push } from 'react-router-redux';
+import { push } from 'react-router-redux'; // can be "replace" instead of "push"
 import config from '../../config';
 import { asyncConnect } from 'redux-async-connect';
 
@@ -28,15 +28,14 @@ import { asyncConnect } from 'redux-async-connect';
   }
 }])
 @connect(
-  state => ({user: state.auth.user, token: state.auth.token}),
+  state => ({user: state.auth.user}),
   {logout, pushState: push})
 export default class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
     user: PropTypes.object,
     logout: PropTypes.func.isRequired,
-    pushState: PropTypes.func.isRequired,
-    token: PropTypes.string
+    pushState: PropTypes.func.isRequired
   };
 
   static contextTypes = {
@@ -44,10 +43,10 @@ export default class App extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if (!this.props.token && nextProps.token) {
+    if (!this.props.user && nextProps.user) {
       // login
       this.props.pushState('/loginSuccess');
-    } else if (this.props.token && !nextProps.token) {
+    } else if (this.props.user && !nextProps.user) {
       // logout
       this.props.pushState('/');
     }
@@ -97,17 +96,20 @@ export default class App extends Component {
               </LinkContainer>}
 
             </Nav>
-            {user &&
-            <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.firstName}</strong>.</p>}
             <Nav navbar pullRight>
+            {user &&
+            <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as
+              <LinkContainer to="/profile">
+                <font color="blue"> <strong>{user.firstName} {user.lastName}</strong> </font>
+              </LinkContainer> </p>}
               {!user &&
               <LinkContainer to="/login">
-                <NavItem eventKey={1}>Sign in </NavItem>
+                <NavItem eventKey={2}>Sign in </NavItem>
               </LinkContainer> }
 
               {!user &&
               <LinkContainer to="/signup">
-                <NavItem eventKey={2}>Sign up </NavItem>
+                <NavItem eventKey={3}>Sign up </NavItem>
               </LinkContainer>}
             </Nav>
           </Navbar.Collapse>

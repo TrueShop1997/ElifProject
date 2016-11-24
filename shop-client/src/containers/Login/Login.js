@@ -36,7 +36,7 @@ export default class Login extends Component {
           <h3>Login</h3>
           <div className={styles.blockMedia + ' row'}>
             <div className="col-xs-4 col-sm-2">
-              <a href="#" className={styles.btnFacebook + ' btn btn-lg btn-block'}>
+              <a href="/api/login/facebook/" className={styles.btnFacebook + ' btn btn-lg btn-block'}>
                 <i className="fa fa-facebook visible-xs"></i>
                 <span className="hidden-xs"><font color="white">Facebook</font></span>
               </a>

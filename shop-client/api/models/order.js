@@ -28,7 +28,7 @@ const OrderSchema = new Schema({
     ],
     required: true
   },
-  total: { type: Number, required: true }
+  total: { type: Number }
   // shippingAddress: String
 });
 
