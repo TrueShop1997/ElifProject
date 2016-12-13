@@ -1,35 +1,39 @@
-.widgets {
+.orders {
   .refreshBtn {
     margin-left: 20px;
   }
-  .idCol {
+  .idOrdersCol {
+    vertical-align: middle;
     width: 5%;
   }
-  .colorCol {
-    width: 20%;
-  }
-  .sprocketsCol {
-    width: 20%;
-    text-align: right;
-    input {
-      text-align: right;
-    }
-  }
-  .ownerCol {
-    width: 30%;
-  }
-  .buttonCol {
+  .userColMain {
     width: 25%;
-    :global(.btn) {
-      margin: 0 5px;
+    text-align: center;
+    .userCol {
+      text-align: left;
     }
   }
-  tr.saving {
-    opacity: 0.8;
-    :global(.btn) {
-      &[disabled] {
-        opacity: 1;
+  .productsColMain {
+    width: 50%;
+    text-align: center;
+
+    .productsCol {
+      text-align: left;
+
+      .productNumber {
+        float: left;
+      }
+      .productName {
+        display: inline-block;
       }
     }
+  }
+  .sendCol {
+    vertical-align: middle;
+    width: 10%;
+  }
+  .rejectCol {
+    vertical-align: middle;
+    width: 10%;
   }
 }

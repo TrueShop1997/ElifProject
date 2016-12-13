@@ -1,37 +1,55 @@
-// collection Orders:
-// {
-//   "_id",
-//     "userId",
-//     "productId",
-//     "status": 'IN_CART' || 'PAID' || 'DELIVERING' || 'DELIVERED'
-// }
+import {db} from "./index";
 
-export function getOrdersWithStatusPAID(req) {
-  let orders;
-  let url = 'mongodb://main:mainmain@ds035995.mlab.com:35995/trueshop1997db';
-  require('mongodb').MongoClient.connect(url, function (err, db) {
+function connectToDbOrdersModel() {
+  let Orders = new db.Schema({
+    _id: { type: db.Schema.Types.ObjectId, required: true },
+    userId: { type: db.Schema.Types.ObjectId, required: true },
+    products: { type: Array, required: true },
+    status: {type: db.Schema.Types.String, required: true}
+  });
+
+  return db.mongoose.model('Orders', Orders);
+}
+
+const OrdersModel = connectToDbOrdersModel();
+
+export function getOrdersWithStatusPAID() {
+  return OrdersModel.find({'status': 'PAID'}, function (err, orders) {
+    if(!err) {
+      return orders;
+    }
+    console.error('getOrdersWithStatusPAID error: ' + err);
+    return 'error in getOrdersWithStatusPAID: ' + err;
+  });
+}
+
+export function sendToDeliveryOrder(id) {
+  return OrdersModel.findById(id, function (err, order) {
+    if (err) {
+      console.error('sendToDeliveryOrder error1: ' + err);
+      return 'error1 in sendToDeliveryOrder: ' + err;
+    }
+    order.status = 'DELIVERING';
+    order.save(function (err, updatedOrder) {
+      if (err) {
+        console.error('sendToDeliveryOrder error2: ' + err);
+        return 'error2 in sendToDeliveryOrder: ' + err;
+      }
+      return updatedOrder;
+    });
+  });
+}
+
+export function deleteOrder(id) {
+  return OrdersModel.remove({ _id: id }, function(err) {
     if (!err) {
-      console.log('All OK');
-
-      db.collection('orders').find({status: 'PAID'}).toArray(function (err, res) {
-        if (res.length) {
-          console.log(res);
-          orders = res;
-        }
-        else if (err) {
-          console.log(err);
-        }
-        else {
-          console.log('No document(s) found with defined "find" criteria!');
-        }
-        db.close();
-      })
+      return 0;
     }
     else {
-      console.log('Unable to connect', err);
+      console.error('deleteOrder error: ' + err);
+      return 'error in deleteOrder: ' + err;
     }
   });
-  return orders;
 }
 
 

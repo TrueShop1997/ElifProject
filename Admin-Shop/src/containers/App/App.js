@@ -74,12 +74,16 @@ export default class App extends Component {
             </Navbar.Brand>
             <Navbar.Toggle/>
           </Navbar.Header>
-
           <Navbar.Collapse eventKey={0}>
             <Nav navbar>
-              {user && <LinkContainer to="/chat">
-                <NavItem eventKey={1}>Chat</NavItem>
-              </LinkContainer>}
+              {/* {user && <LinkContainer to="/chat">*/}
+                {/* <NavItem eventKey={1}>Chat</NavItem>*/}
+              {/* </LinkContainer>}*/}
+
+              <LinkContainer to="/users">
+                <NavItem eventKey={1}>Users</NavItem>
+              </LinkContainer>
+
               <LinkContainer to="/orders">
                 <NavItem eventKey={2}>Orders</NavItem>
               </LinkContainer>
@@ -90,20 +94,30 @@ export default class App extends Component {
               <LinkContainer to="/survey">
                 <NavItem eventKey={4}>Survey</NavItem>
               </LinkContainer>
-              <LinkContainer to="/about">
-                <NavItem eventKey={5}>About Us</NavItem>
+              {/* <LinkContainer to="/about">*/}
+                {/* <NavItem eventKey={5}>About Us</NavItem>*/}
+              {/* </LinkContainer>*/}
+
+              <LinkContainer to="/categories">
+                <NavItem eventKey={5}>Categories</NavItem>
               </LinkContainer>
+
+              <LinkContainer to="/products">
+                <NavItem eventKey={6}>Products</NavItem>
+              </LinkContainer>
+
 
               {!user &&
               <LinkContainer to="/login">
-                <NavItem eventKey={6}>Login</NavItem>
+                <NavItem eventKey={7}>Login</NavItem>
               </LinkContainer>}
               {user &&
               <LinkContainer to="/logout">
-                <NavItem eventKey={7} className="logout-link" onClick={this.handleLogout}>
+                <NavItem eventKey={8} className="logout-link" onClick={this.handleLogout}>
                   Logout
                 </NavItem>
               </LinkContainer>}
+
             </Nav>
             {user &&
             <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as <strong>{user.name}</strong>.</p>}

@@ -1,19 +1,20 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import { isLoaded as isAuthLoaded } from 'redux/modules/authA';
+import { isLoaded as isAuthLoaded } from 'redux/modules/auth';
 import {
     App,
-    Chat,
-    Home,
     Widgets,
-    About,
     Orders,
-    // Login,
-    LoginA,
+    Login,
     LoginSuccess,
     Survey,
     NotFound,
+    Home,
+    Categories,
+    Users,
+    Products
   } from 'containers';
+
 
 export default (store) => {
   const requireLogin = (nextState, replace, cb) => {
@@ -38,23 +39,30 @@ export default (store) => {
   return (
     <Route path="/" component={App}>
       { /* Home (main) route */ }
+
       <IndexRoute component={Home}/>
 
       { /* Routes requiring login */ }
       <Route onEnter={requireLogin}>
-        <Route path="chat" component={Chat}/>
+        {/* <Route path="chat" component={Chat}/>*/}
         <Route path="loginSuccess" component={LoginSuccess}/>
+        {/* <Route path="about" component={About}/>*/}
+        <Route path="survey" component={Survey}/>
+        <Route path="widgets" component={Widgets}/>
+
+        <Route path="categories" component={Categories}/>
+        <Route path="orders" component={Orders}/>
+        <Route path="users" component={Users}/>
+        <Route path="products" component={Products}/>
+
       </Route>
 
-      { /* Routes */ }
-      <Route path="about" component={About}/>
-      <Route path="login" component={LoginA}/>
-      <Route path="survey" component={Survey}/>
-      <Route path="widgets" component={Widgets}/>
 
-      <Route path="orders" component={Orders}/>
+      { /* Routes */ }
+       <Route path="login" component={Login}/>
+
       { /* Catch all route */ }
-      <Route path="*" component={NotFound} status={404} />
+      <Route path="*" component={NotFound} status={404}/>
     </Route>
   );
 };

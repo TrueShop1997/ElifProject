@@ -8,7 +8,12 @@ export LoginSuccess from './LoginSuccess/LoginSuccess';
 export Survey from './Survey/Survey';
 export NotFound from './NotFound/NotFound';
 
-export LoginA from './LoginA/LoginA';
+export HomeA from './Home/Home';
+// export Categories from './CategoriesOLD/CategoriesOLD';
+// export LoginA from './LoginA/LoginA';
 export Orders from './Orders/Orders';
+export Categories from './Categories/Categories';
+export Products from './Products/Products';
+export Users from './Users/Users';
 
 

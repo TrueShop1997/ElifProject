@@ -1,29 +1,46 @@
-const mockOrders = [
-  {id: 1, userName: 'Pavlo',  productId: 7, product: 'Hp pavilion', status: 'PAID'},
-  {id: 2, userName: 'Dmytro', productId: 1, product: 'Asus rog',    status: 'PAID'},
-  {id: 3, userName: 'Ivan',   productId: 8, product: 'Acer e15',    status: 'PAID'},
-  {id: 4, userName: 'Petro',  productId: 2, product: 'Lenovo p70',  status: 'PAID'}
-];
+import * as OrdersDb from './../../DbApi/Orders';
+import * as UsersDb from './../../DbApi/Users';
 
-export function getOrdersFromDb(req) {
-  let orders = req.session.orders;
-  if (!orders) {
-    orders = mockOrders;
-    req.session.orders = orders;
-  }
-  return orders;
+export function get() {
+  return new Promise((resolve, reject) => {
+    OrdersDb.getOrdersWithStatusPAID().then(orders => {
+      let actions = [];
+      for(let i = 0; i < orders.length; ++i) {
+        actions.push(UsersDb.getUserById(orders[i].userId));
+      }
+      Promise.all(actions).then(users => {
+        let returnOrders = [];
+        for(let i = 0; i < orders.length; ++i) {
+          returnOrders.push({id: orders[i]._id, user: users[i], products: orders[i].products});
+        }
+        resolve(returnOrders);
+      }).catch(err => {
+        reject('error in get: ' + err);
+      });
+    })
+  });
 }
 
-export default function orders(req) {
+export function apply(req) {
   return new Promise((resolve, reject) => {
-    // make async call to database
-    setTimeout(() => {
-      try {
-        resolve(getOrdersFromDb(req));
-      }
-      catch (e){
-        reject(e);
-      }
-    }, 1000); // simulate async load
+    // send to delivery query
+    ////
+    OrdersDb.sendToDeliveryOrder(req.body.id).then(order => {
+        resolve({'id': order._id});
+    }).catch(err => {
+      console.log('err: ' + err);
+      reject('error in apply:' + err);
+    });
+  });
+}
+
+export function cancel(req) {
+  return new Promise((resolve, reject) => {
+    OrdersDb.deleteOrder(req.body.id).then(() => {
+      resolve({'id': req.body.id});
+    }).catch(err => {
+      console.log('err: ' + err);
+      reject('error in apply:' + err);
+    });
   });
 }

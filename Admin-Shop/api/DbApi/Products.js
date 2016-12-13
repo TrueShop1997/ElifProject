@@ -1,44 +1,29 @@
-// collection Products:
-// {
-//   "_id",
-//   "categoryId",
-//   "name": String,
-//   "price": Number,
-//   "inStock": Number,
-//   "images": Array of strings,
-//   "дата випуску/дата з'явлення в шопі": Date,
-//   "snippet": String,
-//   "description": String,
-//   "additionalFeatures": String,
-//   "properties": [
-//   ...
-//   ]
-// }
+import {db} from "./index";
 
-export function getProductById(req) {
-  let products;
-  let url = 'mongodb://main:mainmain@ds035995.mlab.com:35995/trueshop1997db';
-  require('mongodb').MongoClient.connect(url, function (err, db) {
-    if (!err) {
-      console.log('All OK');
-
-      db.collection('product').find({_id: req}).toArray(function (err, res) {
-        if (res.length) {
-          console.log(res);
-          products = res;
-        }
-        else if (err) {
-          console.log(err);
-        }
-        else {
-          console.log('No document(s) found with defined "find" criteria!');
-        }
-        db.close();
-      })
-    }
-    else {
-      console.log('Unable to connect', err);
-    }
+function connectToDbProductsModel() {
+  let Products = new db.Schema({
+    _id: { type: db.Schema.Types.ObjectId, required: true },
+    categoryId: { type: db.Schema.Types.String, required: true },
+    name: { type: db.Schema.Types.String, required: true },
+    price: { type: db.Schema.Types.String, required: true },
+    inStock: { type: db.Schema.Types.String, required: true },
+    images: {type: db.Schema.Types.String, required: true},
+    description: {type: db.Schema.Types.String, required: true},
+    // date: {type: db.Schema.Types.String, required: true},
+    properties: {type: Array, required: true}
   });
-  return products;
+
+  return db.mongoose.model('Products', Products);
+}
+
+const ProductsModel = connectToDbProductsModel();
+
+export function getProductById(id) {
+  return ProductsModel.find({'_id': id}, function (err, product) {
+    if(!err) {
+      return product;
+    }
+    console.error('getProductById error: ' + err);
+    return 'error in getProductById: ' + err;
+  });
 }
