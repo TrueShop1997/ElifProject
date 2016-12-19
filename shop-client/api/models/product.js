@@ -4,11 +4,9 @@ const ProductSchema = new Schema({
   categoryId: String,
   name: String,
   price: Number,
-  inStock: Boolean,
   images: [String],
-  // addedDate: Date,
   company: String,
-  quantity: Number,
+  inStock: Number,
   description: String,
   properties: [{
     name: String,

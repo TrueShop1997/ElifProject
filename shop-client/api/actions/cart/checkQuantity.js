@@ -14,8 +14,8 @@ export default function checkQuantity(req) {
           return new Promise((res, rej) => {
             Product.findById(item.productId)
               .then(inStock => {
-                if (inStock.quantity < item.quantity) {
-                  outOfStock.push(_.pick(inStock, '_id', 'name', 'quantity'));
+                if (inStock.inStock < item.quantity) {
+                  outOfStock.push(_.pick(inStock, '_id', 'name', 'inStock'));
                 }
               })
               .then(() => res());

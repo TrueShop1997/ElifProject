@@ -118,7 +118,7 @@ export default class Cart extends Component {
                                         {item.name}
                                       </td>
                                       <td>
-                                        {item.quantity}
+                                        {item.inStock}
                                       </td>
                                     </tr>)
                                 }

@@ -17,7 +17,7 @@ export default function addProduct(req) {
                     return elem.productId.toString() === productId;
                 });
                 if (item) {
-                    item.quantity += quantity;
+                    item.inStock += quantity;
                     order.save();
                     resolve({ order: order, total: order.findTotal() });
                 } else {
@@ -42,7 +42,7 @@ export default function addProduct(req) {
                 return elem.productId.toString() === productId;
             });
             if (item) {
-                item.quantity += quantity;
+                item.inStock += quantity;
                 order.save();
                 resolve({ order: order, total: order.findTotal() });
             } else {
