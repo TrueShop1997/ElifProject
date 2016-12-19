@@ -21,8 +21,13 @@ export default function attachInfo(req) {
         body === 'wrong email') {
         reject({ bankResponse: 'BAD' });
       } else {
-        User.update({ _id: req.user._id }, { $set: { email: req.body.email, bankId: body } })
-          .then(user => resolve(user));
+        if (req.body.email.length) {
+          User.update({_id: req.user._id}, {$set: {email: req.body.email, bankId: body}})
+            .then(user => resolve(user));
+        } else {
+          User.update({_id: req.user._id}, {$set: {bankId: body}})
+            .then(user => resolve(user));
+        }
       }
     });
   });

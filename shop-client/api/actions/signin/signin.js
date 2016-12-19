@@ -7,7 +7,7 @@ export default function signin(req) {
         return reject(err); // will generate a 500 error
       }
       if (! user) {
-        return reject({ message: 'Bad credentials' });
+        return reject({ message: 'Bad credentials', status: 406 });
       }
       req.login(user, loginErr => {
         if (loginErr) {

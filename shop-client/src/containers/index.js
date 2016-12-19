@@ -11,4 +11,4 @@ export Checkout from './Checkout/Checkout';
 export Orders from './Orders/Orders';
 export VerifyEmail from './VerifyEmail/VerifyEmail';
 export AttachInfo from './AttachInfo/AttachInfo';
-export ForgotPassword from './ForgotPassword/ForgotPassword';
+export AttachBank from './AttachBank/AttachBank';

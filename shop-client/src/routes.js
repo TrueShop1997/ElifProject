@@ -15,7 +15,7 @@ import {
     Orders,
     VerifyEmail,
     AttachInfo,
-    ForgotPassword
+    AttachBank
   } from './containers';
 
 export default (store) => {
@@ -53,13 +53,13 @@ export default (store) => {
         <Route path="checkout" component={Checkout} />
         <Route path="verify/:id" component={VerifyEmail} />
         <Route path="attach-info" component={AttachInfo} />
+        <Route path="attach-bank" component={AttachBank} />
       </Route>
 
       { /* Routes */ }
       <Route path="about" component={About}/>
       <Route path="/login" component={Login}/>
       <Route path="/signup" component={Signup}/>
-      <Route path="forgot-password" component={ForgotPassword} />
 
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />

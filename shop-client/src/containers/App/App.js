@@ -45,7 +45,11 @@ export default class App extends Component {
   componentWillReceiveProps(nextProps) {
     if (!this.props.user && nextProps.user) {
       // login
-      this.props.pushState('/loginSuccess');
+      if (nextProps.user.bankId.length) {
+        this.props.pushState('/loginSuccess');
+      } else {
+        this.props.pushState('/attach-bank');
+      }
     } else if (this.props.user && !nextProps.user) {
       // logout
       this.props.pushState('/');
