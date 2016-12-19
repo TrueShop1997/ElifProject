@@ -1,99 +1,109 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
+import AsyncButton from 'react-async-button';
 
 import * as authActions from 'redux/modules/auth';
 
 @connect(
-  state => ({user: state.auth.user}),
+  state => ({ user: state.auth.user,
+              loginError: state.auth.loginError,
+              loggingIn: state.auth.loggingIn }),
   authActions)
 export default class Login extends Component {
   static propTypes = {
     user: PropTypes.object,
     login: PropTypes.func,
-    logout: PropTypes.func,
+    loginError: PropTypes.object,
+    loggingIn: PropTypes.bool
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = () => {
     const email = this.refs.email;
     const password = this.refs.password;
     if (email.value && password.value) {
       event.preventDefault();
-      this.props.login({ email: email.value, password: password.value });
+      const emailValue = email.value;
+      const passwordValue = password.value;
       email.value = '';
       password.value = '';
-    } else {
-      this.refs.errorMsg.value = 'Smth wrong. try again';
+      return this.props.login({ email: emailValue, password: passwordValue });
     }
   };
 
   render() {
-    // const { user, logout } = this.props;
+    const { user, loginError } = this.props;
     const styles = require('./Login.scss');
 
     return (
       <div className={styles.loginPage + ' container'}>
+        {this.props.loggingIn &&
+          <div className="container" id="overlay" style={{
+            position: 'absolute',
+            marginTop: '-50px',
+            height: '100%',
+            width: '100%',
+            opacity: '.6',
+            zIndex: 999999,
+            marginLeft: '-115px',
+            backgroundColor: 'black'}}>
+            <div style={{
+              boxSizing: 'bordered-box',
+              textAlign: 'center',
+              margin: '100px'
+            }}>
+              <i className={' fa fa-refresh fa-spin fa-3x fa-fw'} style={{
+                color: 'white',
+                marginTop: '10%'
+              }}></i>
+            </div>
+          </div>
+        }
         <div>
-          <h3>Login</h3>
-          <div className={styles.blockMedia + ' row'}>
-            <div className="col-xs-4 col-sm-2">
-              <a href="/api/login/facebook/" className={styles.btnFacebook + ' btn btn-lg btn-block'}>
-                <i className="fa fa-facebook visible-xs"></i>
-                <span className="hidden-xs"><font color="white">Facebook</font></span>
-              </a>
-            </div>
-            <div className="col-xs-4 col-sm-2">
-              <a href="#" className={styles.btnTwitter + ' btn btn-lg btn-block'}>
-                <i className="fa fa-twitter visible-xs"></i>
-                <span className="hidden-xs"><font color="white">Twitter</font></span>
-              </a>
-            </div>
-            <div className="col-xs-4 col-sm-2">
-              <a href="#" className={styles.btnGoogle + ' btn btn-lg btn-block'}>
-              <i className="fa fa-google-plus visible-xs"></i>
-              <span className="hidden-xs"><font color="white">Google+</font></span>
-              </a>
-            </div>
-          </div>
 
           <div className="row">
-            <div className="col-xs-12 col-sm-6">
-              <hr />
-                <span className="omb_spanOr">or</span>
+            <div className="col-md-4">
             </div>
-          </div>
-
-          <div className="row">
-            <div className="col-xs-12 col-sm-6">
-              <form className = "form-signin" onSubmit={this.handleSubmit}>
-                <div className="input-group">
-                  <span className="input-group-addon"><i className="fa fa-user"></i></span>
-                  <input ref="email" type="email" className="form-control" placeholder="email address" required />
+            <div className="col-md-4">
+              <h3>Login</h3>
+              <div className={styles.blockMedia + ' row'}>
+                <div>
+                  <a href="/api/login/facebook/" className={styles.btnFacebook + ' btn btn-lg btn-block'}>
+                    <i className="fa fa-facebook visible-xs"></i>
+                    <span className="hidden-xs"><font color="white">Facebook</font></span>
+                  </a>
                 </div>
-                <span className="help-block"></span>
+              </div>
 
-                <div className="input-group">
+              <div className="row">
+                <div>
+                  <hr />
+                  <span className="omb_spanOr">or</span>
+                </div>
+              </div>
+              <br />
+              <form className="form-signin" onSubmit={this.handleSubmit}>
+                <div className="input-group" style={{marginBottom: '20px'}}>
+                  <span className="input-group-addon"><i className="fa fa-user"></i></span>
+                  <input ref="email" type="email" className="form-control" placeholder="Email address" required />
+                </div>
+                <div className="input-group" style={{marginBottom: '20px'}}>
                   <span className="input-group-addon"><i className="fa fa-lock"></i></span>
                   <input ref="password" type="password" className="form-control" placeholder="Password" required />
                 </div>
-                <label className="help-block" ref="errorMsg"></label>
-
-                <button className="btn btn-lg btn-primary btn-block" onClick={this.handleSubmit}>Login</button>
+                {!user && loginError &&
+                  <label className="help-block"><font color="red">{loginError.message}</font></label>
+                }
+                <AsyncButton className="btn btn-lg btn-primary btn-block"
+                             text="Login"
+                             pendingText="Logining"
+                             fulFilledText="Logged in"
+                             onClick={this.handleSubmit} />
               </form>
+            <div className="col-md-4">
             </div>
           </div>
-          <div className="row">
-            <div className="col-xs-12 col-sm-3">
-              <label className="checkbox">
-                <input type="checkbox" value="remember-me" />Remember Me
-              </label>
-            </div>
-            <div className="col-xs-12 col-sm-3">
-              <p>
-                <a href="#">Forgot password?</a>
-              </p>
             </div>
           </div>
-        </div>
         </div>
         );
   }

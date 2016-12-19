@@ -5,11 +5,7 @@
  *
  */
 
-export CounterButton from './CounterButton/CounterButton';
-export GithubButton from './GithubButton/GithubButton';
-export InfoBar from './InfoBar/InfoBar';
-export MiniInfoBar from './MiniInfoBar/MiniInfoBar';
-export SurveyForm from './SurveyForm/SurveyForm';
-export WidgetForm from './WidgetForm/WidgetForm';
 export SignupForm from './SignupForm/SignupForm';
+export ProfileForm from './ProfileForm/ProfileForm';
+export AttachInfoForm from './AttachInfoForm/AttachInfoForm';
 export AddProductToCartButton from './AddProductToCartButton/AddProductToCartButton';

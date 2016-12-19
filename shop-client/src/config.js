@@ -15,12 +15,16 @@ module.exports = Object.assign({
   apiHost: process.env.APIHOST || 'localhost',
   apiPort: process.env.APIPORT,
   database: 'localhost/clientShopDb',
+  // database: 'mongodb://login:pass@ds011241.mlab.com:11241/trueshop1997',
+  bankAPIKey: 'Bearer 374d4b32-7d0a-42af-88cb-046368e1b6df',
+  bankAPIHost: 'https://bankapi1997.herokuapp.com',
   secret: 'verysecretkey',
+  verifyEmailId: 'asd8asdh2nuew7qrjk236tk9e8rwh',
   app: {
     title: 'TrueShop1997',
     description: 'All the modern best practices in one example.',
     head: {
-      titleTemplate: 'React Redux Example: %s',
+      titleTemplate: 'TrueShop1997: %s',
       meta: [
         {name: 'description', content: 'All the modern best practices in one example.'},
         {charset: 'utf-8'},

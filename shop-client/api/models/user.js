@@ -6,13 +6,13 @@ const UserSchema = new Schema({
     lastName: { type: String },
     phoneNumber: { type: String, default: '' },
     address: { type: String, default: '' },
-    email: { type: String, lowercase: true, index: true, unique: true },
+    email: { type: String, lowercase: true, index: true, unique: true, default: '' },
     password: {type: String },
     isAdmin: { type: Boolean, default: false },
     isEmailVerified: { type: Boolean, default: false },
     createdDate: { type: Date, default: Date.now() },
-    facebookId: String
-    // bankAccessToken: String
+    facebookId: String,
+    bankId: { type: String, default: '' }
 });
 
 UserSchema.pre('save', async function (next) {

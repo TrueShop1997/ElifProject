@@ -6,9 +6,8 @@ import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import Helmet from 'react-helmet';
-import { isLoaded as isInfoLoaded, load as loadInfo } from 'redux/modules/info';
 import { isLoaded as isAuthLoaded, load as loadAuth, logout } from 'redux/modules/auth';
-import { InfoBar } from 'components';
+import {isLoaded, load as loadCart} from 'redux/modules/cart';
 import { push } from 'react-router-redux'; // can be "replace" instead of "push"
 import config from '../../config';
 import { asyncConnect } from 'redux-async-connect';
@@ -16,26 +15,27 @@ import { asyncConnect } from 'redux-async-connect';
 @asyncConnect([{
   promise: ({store: {dispatch, getState}}) => {
     const promises = [];
-
-    if (!isInfoLoaded(getState())) {
-      promises.push(dispatch(loadInfo()));
-    }
     if (!isAuthLoaded(getState())) {
       promises.push(dispatch(loadAuth()));
+    }
+    if (getState().auth.user && !isLoaded(getState())) {
+      promises.push(dispatch(loadCart()));
     }
 
     return Promise.all(promises);
   }
 }])
 @connect(
-  state => ({user: state.auth.user}),
+  state => ({user: state.auth.user,
+             cart: state.cart.data}),
   {logout, pushState: push})
 export default class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired,
     user: PropTypes.object,
     logout: PropTypes.func.isRequired,
-    pushState: PropTypes.func.isRequired
+    pushState: PropTypes.func.isRequired,
+    cart: PropTypes.object
   };
 
   static contextTypes = {
@@ -54,12 +54,24 @@ export default class App extends Component {
 
   handleLogout = (event) => {
     event.preventDefault();
-    this.props.logout();
+    this.props.logout()
+      .then(() => {
+        window.location.reload();
+      });
   };
 
   render() {
-    const { user } = this.props;
+    const { user, cart } = this.props;
     const styles = require('./App.scss');
+
+    let totalQuantity = 0;
+    if (user) {
+      if (cart && cart.order.products.length) {
+        totalQuantity = cart.order.products
+          .map(item => item.quantity)
+          .reduce((prev, curr) => prev + curr);
+      }
+    }
 
     return (
       <div className={styles.app}>
@@ -78,38 +90,43 @@ export default class App extends Component {
           <Navbar.Collapse eventKey={0}>
             <Nav navbar>
 
-              <LinkContainer to="/widgets">
-                <NavItem eventKey={1}>Widgets</NavItem>
-              </LinkContainer>
-              <LinkContainer to="/survey">
-                <NavItem eventKey={2}>Survey</NavItem>
-              </LinkContainer>
-              <LinkContainer to="/about">
-                <NavItem eventKey={3}>About Us</NavItem>
-              </LinkContainer>
+              {user &&
+              <LinkContainer to="/cart">
+                <NavItem eventKey={1}>
+                  <span className="glyphicon glyphicon-shopping-cart"></span> Cart <font color="red">({totalQuantity})</font>
+                </NavItem>
+              </LinkContainer>}
+
+              {user &&
+              <LinkContainer to="/orders">
+                <NavItem eventKey={2}>
+                  <span className="glyphicon glyphicon-list-alt"></span> Orders
+                </NavItem>
+              </LinkContainer>}
 
               {user &&
               <LinkContainer to="/logout">
-                <NavItem eventKey={4} className="logout-link" onClick={this.handleLogout}>
-                  Logout
+                <NavItem eventKey={3} className="logout-link" onClick={this.handleLogout}>
+                  <span className="glyphicon glyphicon-log-out"></span> Logout
                 </NavItem>
               </LinkContainer>}
 
             </Nav>
             <Nav navbar pullRight>
             {user &&
-            <p className={styles.loggedInMessage + ' navbar-text'}>Logged in as
+            <p className={styles.loggedInMessage + ' navbar-text'}>Hello,
               <LinkContainer to="/profile">
-                <font color="blue"> <strong>{user.firstName} {user.lastName}</strong> </font>
+                <font color="blue"> <i className="fa fa-user-circle-o" aria-hidden="true"></i>
+                   <strong> {user.firstName} {user.lastName}</strong> </font>
               </LinkContainer> </p>}
               {!user &&
               <LinkContainer to="/login">
-                <NavItem eventKey={2}>Sign in </NavItem>
+                <NavItem eventKey={2}><span className="glyphicon glyphicon-log-in"></span> Sign in </NavItem>
               </LinkContainer> }
 
               {!user &&
               <LinkContainer to="/signup">
-                <NavItem eventKey={3}>Sign up </NavItem>
+                <NavItem eventKey={3}><span className="glyphicon glyphicon-new-window"></span> Sign up </NavItem>
               </LinkContainer>}
             </Nav>
           </Navbar.Collapse>
@@ -118,7 +135,6 @@ export default class App extends Component {
         <div className={styles.appContent}>
           {this.props.children}
         </div>
-        <InfoBar/>
 
         <div className="well text-center">
           (c) <a href = "http://www.eliftech.com/">ElifTech</a> School 2016

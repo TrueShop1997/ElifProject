@@ -1,5 +1,3 @@
-import User from '../../models/user';
-
 import passport from 'passport';
 
 export default function signin(req) {
@@ -9,7 +7,7 @@ export default function signin(req) {
         return reject(err); // will generate a 500 error
       }
       if (! user) {
-        return resolve({ success : false, message : 'authentication failed' });
+        return reject({ message: 'Bad credentials' });
       }
       req.login(user, loginErr => {
         if (loginErr) {

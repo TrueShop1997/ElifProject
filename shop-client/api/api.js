@@ -42,7 +42,7 @@ app.use(session({
   secret: config.secret,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 60000 * 10 }
+  cookie: { maxAge: 60000 * 60 }
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -128,7 +128,7 @@ app.get('/login/facebook',
 app.get('/login/facebook/return',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    res.redirect('/attach-info');
   }
 );
 //

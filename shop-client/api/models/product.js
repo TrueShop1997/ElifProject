@@ -5,9 +5,10 @@ const ProductSchema = new Schema({
   name: String,
   price: Number,
   inStock: Boolean,
-  // images: [String],
+  images: [String],
   // addedDate: Date,
-  // company: String
+  company: String,
+  quantity: Number,
   description: String,
   properties: [{
     name: String,
