@@ -28,7 +28,7 @@ class ProductsFormatter extends Component {
         {
           this.props.items.map((itemProduct) =>
             <tr key={itemProduct._id}>
-              <td><image height="50" width="60" src={itemProduct.images[0]} /></td>
+              <td><image height="50" width="60" src={decodeURIComponent(itemProduct.images[0])} /></td>
               <td className="col-md-4"><a href="#">{itemProduct.name}</a></td>
               <td>{itemProduct.quantity}</td>
               <td>{itemProduct.price * itemProduct.quantity + ' $'}</td>
@@ -89,7 +89,7 @@ class Orders extends Component {
           parseDate(second.date.paid).hour,
           parseDate(second.date.paid).minute,
           parseDate(second.date.paid).second);
-        return this.val > 0 ? dateA - dateB : dateB - dateA;
+        return this.val > 0 ? dateB - dateA : dateA - dateB;
       });
     this.props.setData({ orders: arr });
   }
@@ -101,7 +101,6 @@ class Orders extends Component {
         if (first.status > second.status) return -1;
         return 0;
       });
-    // debugger;
     this.props.setData({ orders: arr });
   };
   renderShowsTotal(start, to, total) {
@@ -119,8 +118,11 @@ class Orders extends Component {
       );
     }
     function paidDateFormatter(cell) {
-      return parseDate(cell.paid).year + '-' + parseDate(cell.paid).month + '-' + parseDate(cell.paid).day + '/' +
-             parseDate(cell.paid).hour + ':' + parseDate(cell.paid).minute + ':' + parseDate(cell.paid).second;
+      let resHtml = `<b>Paid date:</b> ${parseDate(cell.paid).year}-${parseDate(cell.paid).month}-${parseDate(cell.paid).day}/${parseDate(cell.paid).hour}:${parseDate(cell.paid).minute}:${parseDate(cell.paid).second}`;
+      if (cell.delivering) {
+        resHtml += `<br /><b>Delivering date:</b> ${parseDate(cell.delivering).year}-${parseDate(cell.delivering).month}-${parseDate(cell.delivering).day}/${parseDate(cell.delivering).hour}:${parseDate(cell.delivering).minute}:${parseDate(cell.delivering).second}`;
+      }
+      return resHtml;
     }
     const options = {
       page: 1,  // which page you want to show as default
@@ -158,8 +160,9 @@ class Orders extends Component {
           <div>
             <div className="form-group">
               <button className="btn btn-primary" style={{marginTop: '10px'}}
-                      onClick={this.sortOrdersByDate}>Sort by date <i className="fa fa-sort-desc" aria-hidden="true"></i>
-                <i className="fa fa-sort-asc" aria-hidden="true"></i></button>
+                      onClick={this.sortOrdersByDate}>Sort by paid date
+                              {this.val < 0 ? <i className="fa fa-sort-desc" aria-hidden="true"></i> : <i className="fa fa-sort-asc" aria-hidden="true"></i>}
+              </button>
               <button className="btn btn-success" style={{marginTop: '10px', marginLeft: '10px'}}
                       onClick={this.groupByStatus}>Group by status</button>
             </div>
@@ -167,7 +170,7 @@ class Orders extends Component {
               <TableHeaderColumn dataField="products" width="500" dataFormat={productsFormatter}>Products</TableHeaderColumn>
               <TableHeaderColumn dataField="phoneNumber">Phone number</TableHeaderColumn>
               <TableHeaderColumn dataField="shippingAddress">Address</TableHeaderColumn>
-              <TableHeaderColumn dataField="date" dataFormat={paidDateFormatter}>Paid date</TableHeaderColumn>
+              <TableHeaderColumn dataField="date" dataFormat={paidDateFormatter}>Date</TableHeaderColumn>
               <TableHeaderColumn dataField="status" isKey>Status</TableHeaderColumn>
             </BootstrapTable>
           </div>

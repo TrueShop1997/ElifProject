@@ -149,7 +149,7 @@ export default class Checkout extends Component {
               {
                 cart.order.products.map((item) =>
                   <tr key={item._id}>
-                    <td><image height="50" width="60" src={item.images[0]} /></td>
+                    <td><image height="50" width="60" src={decodeURIComponent(item.images[0])} /></td>
                     <td className="col-md-4"><a href="#">{item.name}</a></td>
                     <td>{item.quantity}</td>
                     <td>{item.price * item.quantity + ' $'}</td>

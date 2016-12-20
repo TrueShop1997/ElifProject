@@ -46,7 +46,7 @@ export default class App extends Component {
     if (!this.props.user && nextProps.user) {
       // login
       if (nextProps.user.bankId.length) {
-        this.props.pushState('/loginSuccess');
+        this.props.pushState('/');
       } else {
         this.props.pushState('/attach-bank');
       }

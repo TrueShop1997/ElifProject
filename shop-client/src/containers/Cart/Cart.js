@@ -143,7 +143,7 @@ export default class Cart extends Component {
                         {
                           cart.order.products.map((item) =>
                             <tr key={item._id}>
-                              <td><image height="50" width="60" src={item.images[0]} /></td>
+                              <td><image height="50" width="60" src={decodeURIComponent(item.images[0])} /></td>
                               <td className="col-md-2 col-sm-2 col-xs-2"><a href="#">{item.name}</a></td>
                               <td>{item.price + ' $'}</td>
                               <td>
