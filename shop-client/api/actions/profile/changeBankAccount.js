@@ -15,10 +15,10 @@ export default function changeBankAccount(req) {
       json: { email: req.body.email,
               password: req.body.password }
     }, (err, response, body) => {
-      if (body === 'wrong request! \'email\' paramether is not define' ||
-        body === 'wrong request! \'password\' paramether is not define' ||
-        body === 'wrong pass' ||
-        body === 'wrong email') {
+      if (body.body === 'wrong request! \'email\' paramether is not define' ||
+        body.body === 'wrong request! \'password\' paramether is not define' ||
+        body.body === 'wrong pass' ||
+        body.body === 'wrong email') {
         reject({ message: 'BAD'});
       } else {
         User.update({ _id: req.user._id }, { $set: { bankId: body } });

@@ -15,10 +15,10 @@ export default function attachInfo(req) {
       json: { email: req.body.bankEmail,
         password: req.body.bankPassword }
     }, (err, response, body) => {
-      if (body === 'wrong request! \'email\' paramether is not define' ||
-        body === 'wrong request! \'password\' paramether is not define' ||
-        body === 'wrong pass' ||
-        body === 'wrong email') {
+      if (body.body === 'wrong request! \'email\' paramether is not define' ||
+        body.body === 'wrong request! \'password\' paramether is not define' ||
+        body.body === 'wrong pass' ||
+        body.body === 'wrong email') {
         reject({ bankResponse: 'BAD' });
       } else {
         if (req.body.email.length) {

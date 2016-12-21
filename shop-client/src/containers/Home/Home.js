@@ -39,7 +39,7 @@ export default class Home extends Component {
 
         <div className="container">
           <div className={styles.counterContainer}>
-            <AddProductToCartButton disabled={!this.props.user} productId="5823a1d4f0489be3da46c636" />
+            <AddProductToCartButton disabled={!this.props.user} productId="585ae109734d1d400d11e4f4" />
             <AddProductToCartButton disabled={!this.props.user} productId="5858705aa484501faee644ef"/>
             <AddProductToCartButton disabled={!this.props.user} productId="5858dd0f85342f121236cc2f"/>
           </div>
