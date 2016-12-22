@@ -2,11 +2,11 @@ import {db} from "./index";
 
 function connectToDbCategoriesModel() {
   let Categories = new db.Schema({
-    _id: { type: db.Schema.Types.ObjectId, required: true },
+    // _id: { type: db.Schema.Types.ObjectId, required: true },
     parentId: { type: String, required: true },
     name: { type: db.Schema.Types.String, required: true },
-    properties: {type: Array, required: true}
-  });
+    properties: {type: Array, required: true, default: []}
+  }, { minimize: false });
   return db.mongoose.model('Categories', Categories);
 }
 
@@ -14,6 +14,16 @@ const CategoriesModel = connectToDbCategoriesModel();
 
 export function getCategories() {
   return CategoriesModel.find({}).sort('parentId').exec(function (err, categories) {
+    if(!err) {
+      return categories;
+    }
+    console.error('getCategories error: ' + err);
+    return 'error in getCategories: ' + err;
+  });
+}
+
+export function getCategoriesByIds(ids) {
+  return CategoriesModel.find({'_id': {$in: ids}}).sort('parentId').exec(function (err, categories) {
     if(!err) {
       return categories;
     }

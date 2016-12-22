@@ -1,68 +1,25 @@
 // юзає header.js
-// import React from 'react';
+
 import React, {Component, PropTypes} from 'react';
 import {VelocityTransitionGroup} from 'velocity-react';
-// import {CategoryAdd} from 'components';
 import NodeHeader from './header';
-import {connect} from 'react-redux';
-import * as categoryActions from 'redux/modules/categories';
-import {asyncConnect} from 'redux-async-connect';
-import {isLoaded, load as loadCategories} from 'redux/modules/categories';
 
-@asyncConnect([{
-  deferred: true,
-  promise: ({store: {dispatch, getState}}) => {
-    if (!isLoaded(getState())) {
-      return dispatch(loadCategories());
-    }
-  }
-}])
-
-@connect(
-  state => ({
-    categories: state.categories.data,
-    categoryTreeState: state.categories.categoryTreeState,
-    editing: state.categories.editing,
-    adding: state.categories.adding,
-    deleting: state.categories.deleting
-  }), {...categoryActions})
 
 class TreeNode extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
     this.onClick = this.onClick.bind(this);
-    this.onMinusClick = this.onMinusClick.bind(this);
-    this.onPlusClick = this.onPlusClick.bind(this);
   }
 
   onClick() {
     const toggled = !this.props.node.toggled;
     const onToggle = this.props.onToggle;
-    const temp = this.props.toggledChange;
-    const state = this.props.categoryTreeState;
+    const loadProducts = this.props.loadProducts;
     const id = this.props.node._id;
-    const oldState = (typeof state[id] === 'undefined') ? false : state[id];
-    temp(id, oldState);
-
     if (onToggle) {
       onToggle(this.props.node, toggled);
+      loadProducts(id);
     }
-  }
-
-  onMinusClick() {
-    // <CategoriesForm formKey={String(prop.id)} key={String(prop.id)} initialValues={prop}/>);
-    console.log('Hello World Minus===>' + this.props.node._id);
-
-    // const {deleteCategory} = this.props;
-    // return () => deleteCategory(this.props.node._id);
-  }
-
-  onPlusClick(id) {
-    // <CategoriesForm formKey={String(prop.id)} key={String(prop.id)} initialValues={prop}/>);
-    const addStartCategory = this.props.addStartCategory;
-    addStartCategory(id);
-    console.log('Hello World Plus===>');
   }
 
   animations() {
@@ -85,12 +42,17 @@ class TreeNode extends Component {
   }
 
   _eventBubbles() {
-    return {onToggle: this.props.onToggle};
+    return {
+      onToggle: this.props.onToggle,
+      onAddToggle: this.props.onAddToggle,
+      onEditToggle: this.props.onEditToggle,
+      onRemoveToggle: this.props.onRemoveToggle,
+      loadProducts: this.props.loadProducts
+    };
   }
 
 
   renderDrawer(decorators, animations) {
-    console.log('3) renderDrawer()');
     const toggled = this.props.node.toggled;
     if (!animations && !toggled) {
       return null;
@@ -107,6 +69,7 @@ class TreeNode extends Component {
 
   renderHeader(decorators, animations) {
     const styles = require('../../containers/Categories/Categories.scss');
+    const {onAddToggle, onRemoveToggle, onEditToggle} = this.props;
     // debugger;
     return (
       <div className={styles.mybutton}>
@@ -116,18 +79,25 @@ class TreeNode extends Component {
           style={this.props.style}
           node={Object.assign({}, this.props.node)}
           onClick={this.onClick}/>
-        <div className={styles.mycell}>
-          <button className="btn btn-link btn-xs" onClick={this.onPlusClick}>
-            <span className="glyphicon glyphicon-plus"/></button>
-        </div>
-        <div className={styles.mycell}>
-          <button className="btn btn-link btn-xs" onClick={this.onMinusClick}>
-            <span className="glyphicon glyphicon-minus"/></button>
-        </div>
-        <div className={styles.mycell}>
-          <button className="btn btn-link btn-xs">
-            <span className="glyphicon glyphicon-edit"/></button>
-        </div>
+        {onRemoveToggle[2].isActive && (onRemoveToggle[2].id === this.props.node._id) ?
+          <div className={styles.mycell}>
+            <button className="btn btn-link btn-xs" onClick={() => onRemoveToggle[1](this.props.node._id)}>
+              <i className={'glyphicon glyphicon-ok'}/>
+            </button>
+            <button className="btn btn-link btn-xs" onClick={() => onRemoveToggle[3]()}>
+              <i className="glyphicon glyphicon-remove"/>
+            </button>
+        </div> :
+            <div className={styles.mycell}>
+              <button className="btn btn-link btn-xs" onClick={() => onAddToggle(this.props.node._id)}>
+                <span className="glyphicon glyphicon-plus"/></button>
+              <button className="btn btn-link btn-xs" onClick={() => onRemoveToggle[0](this.props.node._id)}>
+                <span className="glyphicon glyphicon-minus"/></button>
+              <button className="btn btn-link btn-xs"
+                      onClick={() => onEditToggle(this.props.node._id, this.props.node.name)}>
+                <span className="glyphicon glyphicon-edit"/></button>
+            </div>
+          }
         {/* <div className={styles.mycell}>*/}
         {/* <CategoryAdd formKey="1" key="1" initialValues="1"/>*/}
         {/* </div>*/}
@@ -150,7 +120,7 @@ class TreeNode extends Component {
         {children.map((child, index) =>
           <TreeNode
             {...this._eventBubbles()}
-            key={child.id || index}
+            key={child._id || index}
             node={child}
             decorators={this.props.decorators}
             animations={this.props.animations}
@@ -162,7 +132,6 @@ class TreeNode extends Component {
   }
 
   renderLoading(decorators) {
-    // debugger;
     return (
       <ul style={this.props.style.subtree}>
         <li>
@@ -175,7 +144,6 @@ class TreeNode extends Component {
   render() {
     const decorators = this.decorators();
     const animations = this.animations();
-    // debugger;
     return (
       <li style={this.props.style.base} ref="topLevel">
         {/* відповідає за сам вузол(папку/файл)*/}
@@ -189,9 +157,6 @@ class TreeNode extends Component {
 }
 
 TreeNode.propTypes = {
-  toggledChange: PropTypes.func.isRequired,
-
-  categoryTreeState: PropTypes.bool.isRequired,
   style: PropTypes.object.isRequired,
   node: PropTypes.object.isRequired,
   decorators: PropTypes.object.isRequired,
@@ -200,9 +165,13 @@ TreeNode.propTypes = {
     PropTypes.bool
   ]).isRequired,
   onToggle: PropTypes.func,
+  onAddToggle: PropTypes.func,
+  onEditToggle: PropTypes.func,
+  onRemoveToggle: PropTypes.array,
+  loadProducts: PropTypes.func,
   categories: PropTypes.array,
-  addStartCategory: PropTypes.func.isRequired,
-  deleteCategory: PropTypes.func.isRequired,
+  // addStartCategory: PropTypes.func.isRequired,
+  // deleteCategory: PropTypes.func.isRequired,
 };
 
 export default TreeNode;

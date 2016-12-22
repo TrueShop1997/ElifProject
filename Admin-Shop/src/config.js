@@ -1,5 +1,5 @@
 require('babel-polyfill');
-const logoImage = 'https://platform-user-uploads.s3.amazonaws.com/blog/category/logo/62/sys_admin.png';
+
 const environment = {
   development: {
     isProduction: false
@@ -16,18 +16,14 @@ module.exports = Object.assign({
   apiPort: process.env.APIPORT,
   app: {
     title: 'Admins TS',
-    description: '',
     head: {
-      titleTemplate: 'Admins: %s',
+      titleTemplate: 'Admins TS: %s',
       meta: [
-        {name: 'description', content: 'All the modern best practices in one example.'},
         {charset: 'utf-8'},
-        {property: 'og:site_name', content: 'Admins'},
-        // {property: 'og:image', content: 'https://react-redux.herokuapp.com/logo.png'},
-        {property: 'og:image', content: logoImage},
+        {property: 'og:site_name', content: 'React Redux Example'},
+        {property: 'og:image', content: 'https://pbs.twimg.com/profile_images/458693768116330496/7t2lf7Yu.png'},
         {property: 'og:locale', content: 'en_US'},
-        {property: 'og:title', content: 'Admins'},
-        {property: 'og:description', content: 'All the modern best practices in one example.'},
+        {property: 'og:title', content: 'Admins TS'},
         {property: 'og:card', content: 'summary'},
         {property: 'og:site', content: '@erikras'},
         {property: 'og:creator', content: '@erikras'},

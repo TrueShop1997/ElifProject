@@ -18,6 +18,10 @@ class TreeBeard extends Component {
       PropTypes.bool
     ]),
     onToggle: PropTypes.func,
+    onAddToggle: PropTypes.func,
+    onEditToggle: PropTypes.func,
+    onRemoveToggle: PropTypes.array,
+    loadProducts: PropTypes.func,
     decorators: PropTypes.object
   };
 
@@ -44,6 +48,10 @@ class TreeBeard extends Component {
             key={index || node._id}
             node={node}
             onToggle={this.props.onToggle}
+            onAddToggle={this.props.onAddToggle}
+            onEditToggle={this.props.onEditToggle}
+            onRemoveToggle={this.props.onRemoveToggle}
+            loadProducts={this.props.loadProducts}
             animations={this.props.animations}
             decorators={this.props.decorators}
             style={this.props.style.tree.node}

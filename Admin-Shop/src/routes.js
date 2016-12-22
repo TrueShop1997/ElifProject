@@ -1,33 +1,30 @@
 import React from 'react';
 import {IndexRoute, Route} from 'react-router';
-import { isLoaded as isAuthLoaded } from 'redux/modules/auth';
+import {isLoaded as isAuthLoaded, load as loadAuth} from 'redux/modules/auth';
 import {
-    App,
-    Widgets,
-    Orders,
-    Login,
-    LoginSuccess,
-    Survey,
-    NotFound,
-    Home,
-    Categories,
-    Users,
-    Products
-  } from 'containers';
-
+  App,
+  Home,
+  Login,
+  LoginSuccess,
+  NotFound,
+  Orders,
+  Categories,
+  Users
+} from 'containers';
 
 export default (store) => {
   const requireLogin = (nextState, replace, cb) => {
     function checkAuth() {
-      const { auth: { user }} = store.getState();
+      const {auth: {user}} = store.getState();
       if (!user) {
         // oops, not logged in, so can't be here!
         replace('/');
       }
       cb();
     }
+
     if (!isAuthLoaded(store.getState())) {
-      store.dispatch(checkAuth);
+      store.dispatch(loadAuth()).then(checkAuth);
     } else {
       checkAuth();
     }
@@ -37,32 +34,23 @@ export default (store) => {
    * Please keep routes in alphabetical order
    */
   return (
-    <Route path="/" component={App}>
-      { /* Home (main) route */ }
+      <Route path="/" component={App}>
+        { /* Home (main) route */ }
+        <IndexRoute component={Home}/>
 
-      <IndexRoute component={Home}/>
+        { /* Routes requiring login */ }
+        <Route onEnter={requireLogin}>
+          <Route path="loginSuccess" component={LoginSuccess}/>
+          <Route path="categories" component={Categories}/>
+          <Route path="orders" component={Orders}/>
+          <Route path="users" component={Users}/>
+        </Route>
 
-      { /* Routes requiring login */ }
-      <Route onEnter={requireLogin}>
-        {/* <Route path="chat" component={Chat}/>*/}
-        <Route path="loginSuccess" component={LoginSuccess}/>
-        {/* <Route path="about" component={About}/>*/}
-        <Route path="survey" component={Survey}/>
-        <Route path="widgets" component={Widgets}/>
+        { /* Routes */ }
+        <Route path="login" component={Login}/>
 
-        <Route path="categories" component={Categories}/>
-        <Route path="orders" component={Orders}/>
-        <Route path="users" component={Users}/>
-        <Route path="products" component={Products}/>
-
+        { /* Catch all route */ }
+        <Route path="*" component={NotFound} status={404}/>
       </Route>
-
-
-      { /* Routes */ }
-       <Route path="login" component={Login}/>
-
-      { /* Catch all route */ }
-      <Route path="*" component={NotFound} status={404}/>
-    </Route>
   );
 };

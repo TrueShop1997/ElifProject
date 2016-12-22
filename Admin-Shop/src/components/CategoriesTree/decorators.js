@@ -41,7 +41,7 @@ const Header = (props) => {
   const style = props.style;
   return (
     <div style={style.base}>
-      <div style={style.title}>
+      <div style={style.base}>
         {props.node.name}
       </div>
     </div>
@@ -82,7 +82,7 @@ class Container extends Component {
 
   render() {
     const {style, decorators, terminal, onClick, node} = this.props;
-    // const mystyle = require('./../Products.scss');
+    // const mystyle = require('./../ProductOLD.scss');
     const mystyle = require('./../../containers/Categories/Categories.scss');
 
     /* className="form-group form-inline" */

@@ -34,6 +34,7 @@ const LOAD = 'redux-example/categories/LOAD';
 const LOAD_SUCCESS = 'redux-example/categories/LOAD_SUCCESS';
 const LOAD_FAIL = 'redux-example/categories/LOAD_FAIL';
 const TOGGLED = 'redux-example/categories/TOGGLED';
+const CHANGE_SHOW = 'redux-example/categories/CHANGE_SHOW';
 
 const initialState = {
   loaded: false,
@@ -44,8 +45,125 @@ const initialState = {
   editProperty: {'isActive': false},
   deleteProperty: {'isActive': false},
   error: [],
-  categoryTreeState: {}
+  categoryTreeState: {},
+  show: false,
+  types: [ 'choose type', 'string', 'color', 'number']
 };
+
+// function findProperty(propery, data) {
+//   for (let index =0; index < data.length; index++)
+//
+// }
+
+function localEditProperty(property, data, oldProp) {
+  debugger;
+  data.map(category => {
+    category.properties.map(prop => {
+      if (prop.name === oldProp) {
+        const propertyE = category.properties;
+        propertyE.splice(propertyE.indexOf(prop), 1, property);
+        return true;
+      }
+    });
+
+    let children = category.children;
+    if (!Array.isArray(children)) {
+      children = children ? [children] : [];
+    }
+    localEditProperty(property, children, oldProp);
+  });
+}
+
+function localAddProperty(propertyA, id, data) {
+  debugger;
+  data.map(category => {
+    if (category._id === id) {
+      category.properties.push(propertyA);
+      return true;
+    }
+    let children = category.children;
+    if (!Array.isArray(children)) {
+      children = children ? [children] : [];
+    }
+    localAddProperty(propertyA, id, children);
+  });
+}
+
+function localDeleteProperty(name, data) {
+  debugger;
+  data.map(category => {
+    category.properties.map(prop => {
+      if (prop.name === name) {
+        const propertyE = category.properties;
+        propertyE.splice(propertyE.indexOf(prop), 1);
+        return true;
+      }
+    });
+
+    let children = category.children;
+    if (!Array.isArray(children)) {
+      children = children ? [children] : [];
+    }
+    localDeleteProperty(name, children);
+  });
+}
+
+function localAdd(category, data) {
+  for (let node = 0; node < data.length; node++) {
+    if (category.parentId === '0') {
+      data.push(category);
+      return true;
+    }
+    if (data[node]._id === category.parentId) {
+      if (!(typeof data[node].children === 'undefined')) {
+        data[node].children.push(category);
+      } else {
+        data[node] = {
+          '_id': data[node]._id,
+          'parentId': data[node].parentId,
+          'name': data[node].name,
+          'properties': data[node].properties,
+          'children': [category]
+        };
+      }
+      return true;
+    }
+    let children = data[node].children;
+    if (!Array.isArray(children)) {
+      children = children ? [children] : [];
+    }
+    localAdd(category, children);
+  }
+}
+
+function localDelete(id, data) {
+  for (let node = 0; node < data.length; node++) {
+    if (data[node]._id === id) {
+      data.splice(node, 1);
+      return true;
+    }
+    let children = data[node].children;
+    if (!Array.isArray(children)) {
+      children = children ? [children] : [];
+    }
+    localDelete(id, children);
+  }
+}
+
+function localEdit(category, data) {
+  debugger;
+  for (let node = 0; node < data.length; node++) {
+    if (data[node]._id === category.id) {
+      data[node].name = category.name;
+      return true;
+    }
+    let children = data[node].children;
+    if (!Array.isArray(children)) {
+      children = children ? [children] : [];
+    }
+    localEdit(category, children);
+  }
+}
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -57,7 +175,11 @@ export default function reducer(state = initialState, action = {}) {
           [action.id]: !action.oldState
         }
       };
-
+    case CHANGE_SHOW:
+      return {
+        ... state,
+        show: !action.show
+      };
 
     case LOAD:
       return {
@@ -84,10 +206,13 @@ export default function reducer(state = initialState, action = {}) {
     case ADD_CATEGORY:
       return state;
     case ADD_SUCCESS_CATEGORY:
+      const data = [...state.data];
+      const category = action.result;
+      localAdd(category, data);
       return {
         ...state,
-        data: action.result.data,
-        addCategory: { 'isActive': false }
+        data: data,
+        addCategory: {'isActive': false}
       };
     case ADD_FAIL_CATEGORY:
       const addCategoryError = [...state.error];
@@ -99,10 +224,13 @@ export default function reducer(state = initialState, action = {}) {
     case EDIT_CATEGORY:
       return state;
     case EDIT_SUCCESS_CATEGORY:
+      const dataEd = [...state.data];
+      const categoryEd = action.category;
+      localEdit(categoryEd, dataEd);
       return {
         ...state,
-        data: action.result.data,
-        editCategory: { 'isActive': false }
+        data: dataEd,
+        editCategory: {'isActive': false}
       };
     case EDIT_FAIL_CATEGORY:
       const editCategoryError = [...state.error];
@@ -114,10 +242,15 @@ export default function reducer(state = initialState, action = {}) {
     case DELETE_CATEGORY:
       return state;
     case DELETE_SUCCESS_CATEGORY:
+      const dataDel = [...state.data];
+      // const id = action.id;
+      const deleteCategoryInfo = {...state.deleteCategory};
+      debugger;
+      localDelete(deleteCategoryInfo.id, dataDel);
       return {
         ...state,
-        data: action.result.data,
-        deleteCategory: { 'isActive': false }
+        data: dataDel,
+        deleteCategory: {'isActive': false}
       };
     case DELETE_FAIL_CATEGORY:
       const deleteCategoryError = [...state.error];
@@ -129,10 +262,14 @@ export default function reducer(state = initialState, action = {}) {
     case ADD_PROPERTY:
       return state;
     case ADD_SUCCESS_PROPERTY:
+      const dataAddProp = [...state.data];
+      const propA = action.property;
+      const id = action.id;
+      localAddProperty(propA, id, dataAddProp);
       return {
         ...state,
-        data: action.result.data,
-        addProperty: { 'isActive': false }
+        // data: action.result.data,
+        addProperty: {'isActive': false}
       };
     case ADD_FAIL_PROPERTY:
       const addPropertyError = [...state.error];
@@ -144,10 +281,16 @@ export default function reducer(state = initialState, action = {}) {
     case EDIT_PROPERTY:
       return state;
     case EDIT_SUCCESS_PROPERTY:
+      debugger;
+      const dataEditProp = [...state.data];
+      const propertyE = action.property;
+      const oldProp = action.oldProp;
+      localEditProperty(propertyE, dataEditProp, oldProp);
       return {
         ...state,
-        data: action.result.data,
-        editProperty: { 'isActive': false }
+        // data: action.result.data,
+        data: dataEditProp,
+        editProperty: {'isActive': false}
       };
     case EDIT_FAIL_PROPERTY:
       const editPropertyError = [...state.error];
@@ -159,10 +302,14 @@ export default function reducer(state = initialState, action = {}) {
     case DELETE_PROPERTY:
       return state;
     case DELETE_SUCCESS_PROPERTY:
+      const dataDelProp = [...state.data];
+      const nameDel = action.name;
+      localDeleteProperty(nameDel, dataDelProp);
       return {
         ...state,
-        data: action.result.data,
-        deleteProperty: { 'isActive': false }
+        // data: action.result.data,
+        data: dataDelProp,
+        deleteProperty: {'isActive': false}
       };
     case DELETE_FAIL_PROPERTY:
       const deletePropertyError = [...state.error];
@@ -176,62 +323,62 @@ export default function reducer(state = initialState, action = {}) {
     case ADD_START_CATEGORY:
       return {
         ...state,
-        addCategory: { 'isActive': true, 'parentId': action.parentId }
+        addCategory: {'isActive': true, 'parentId': action.parentId}
       };
     case ADD_STOP_CATEGORY:
       return {
         ...state,
-        addCategory: { 'isActive': false }
+        addCategory: {'isActive': false}
       };
     case EDIT_START_CATEGORY:
       return {
         ...state,
-        editCategory: { 'isActive': true, 'id': action.id }
+        editCategory: {'isActive': true, 'id': action.id, 'name': action.name}
       };
     case EDIT_STOP_CATEGORY:
       return {
         ...state,
-        editCategory: { 'isActive': false }
+        editCategory: {'isActive': false}
       };
     case DELETE_START_CATEGORY:
       return {
         ...state,
-        deleteCategory: { 'isActive': true, 'id': action.id }
+        deleteCategory: {'isActive': true, 'id': action.id}
       };
     case DELETE_STOP_CATEGORY:
       return {
         ...state,
-        deleteCategory: { 'isActive': false }
+        deleteCategory: {'isActive': false}
       };
     case ADD_START_PROPERTY:
       return {
         ...state,
-        addProperty: { 'isActive': true, 'id': action.id }
+        addProperty: {'isActive': true, 'id': action.id}
       };
     case ADD_STOP_PROPERTY:
       return {
         ...state,
-        addProperty: { 'isActive': false }
+        addProperty: {'isActive': false}
       };
     case EDIT_START_PROPERTY:
       return {
         ...state,
-        editProperty: { 'isActive': true, 'name': action.name, 'id': action.id }
+        editProperty: {'isActive': true, 'name': action.name, 'id': action.id}
       };
     case EDIT_STOP_PROPERTY:
       return {
         ...state,
-        editProperty: { 'isActive': false }
+        editProperty: {'isActive': false}
       };
     case DELETE_START_PROPERTY:
       return {
         ...state,
-        deleteProperty: { 'isActive': true, 'name': action.name, 'id': action.id }
+        deleteProperty: {'isActive': true, 'name': action.name, 'id': action.id}
       };
     case DELETE_STOP_PROPERTY:
       return {
         ...state,
-        deleteProperty: { 'isActive': false }
+        deleteProperty: {'isActive': false}
       };
     default:
       return state;
@@ -268,6 +415,7 @@ export function editCategory(category) {
 export function deleteCategory(id) {
   return {
     types: [DELETE_CATEGORY, DELETE_SUCCESS_CATEGORY, DELETE_FAIL_CATEGORY],
+    id: id,
     promise: (client) => client.post('/category/remove', {
       data: {id}
     })
@@ -276,26 +424,30 @@ export function deleteCategory(id) {
 export function addProperty(property, id) {
   return {
     types: [ADD_PROPERTY, ADD_SUCCESS_PROPERTY, ADD_FAIL_PROPERTY],
-    category: property,
+    property: property,
     id: id,
     promise: (client) => client.post('/category/addProperty', {
       data: {property, id}
     })
   };
 }
-export function editProperty(property, id, oldName) {
+export function editProperty(property, id, oldProp) {
   debugger;
   return {
     types: [EDIT_PROPERTY, EDIT_SUCCESS_PROPERTY, EDIT_FAIL_PROPERTY],
-    category: property,
+    oldProp: oldProp,
+    id: id,
+    property: property,
     promise: (client) => client.post('/category/editProperty', {
-      data: {property, id, oldName}
+      data: {property, id, oldName: oldProp}
     })
   };
 }
 export function deleteProperty(id, name) {
   return {
     types: [DELETE_PROPERTY, DELETE_SUCCESS_PROPERTY, DELETE_FAIL_PROPERTY],
+    name: name,
+    id: id,
     promise: (client) => client.post('/category/deleteProperty', {
       data: {id, name}
     })
@@ -308,8 +460,8 @@ export function addStartCategory(parentId) {
 export function addStopCategory() {
   return {type: ADD_STOP_CATEGORY};
 }
-export function editStartCategory(id) {
-  return {type: EDIT_START_CATEGORY, id};
+export function editStartCategory(id, name) {
+  return {type: EDIT_START_CATEGORY, id, name};
 }
 export function editStopCategory() {
   return {type: EDIT_STOP_CATEGORY};
@@ -342,4 +494,7 @@ export function deleteStopProperty() {
 
 export function toggledChange(id, oldState) {
   return {type: TOGGLED, id, oldState};
+}
+export function changeShow(show) {
+  return {type: CHANGE_SHOW, show};
 }

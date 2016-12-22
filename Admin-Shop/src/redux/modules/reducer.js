@@ -1,6 +1,6 @@
-import { combineReducers } from 'redux';
+import {combineReducers} from 'redux';
 import multireducer from 'multireducer';
-import { routerReducer } from 'react-router-redux';
+import {routerReducer} from 'react-router-redux';
 import {reducer as reduxAsyncConnect} from 'redux-async-connect';
 
 import auth from './auth';
@@ -8,7 +8,6 @@ import counter from './counter';
 import {reducer as form} from 'redux-form';
 import info from './info';
 import widgets from './widgets';
-import hello from './hello';
 
 import categories from './categories';
 import orders from './orders';
@@ -19,7 +18,6 @@ export default combineReducers({
   routing: routerReducer,
   reduxAsyncConnect,
   auth,
-  // authA,
   form,
   multireducer: multireducer({
     counter1: counter,
@@ -28,10 +26,9 @@ export default combineReducers({
   }),
   info,
   widgets,
-  hello,
 
   categories,
+  products,
   orders,
-  users,
-  products
+  users
 });
