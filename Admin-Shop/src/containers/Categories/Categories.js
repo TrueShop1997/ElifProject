@@ -10,11 +10,11 @@ import * as categoryActions from 'redux/modules/categories';
 import * as productsActions from 'redux/modules/products';
 import {initializeWithKey} from 'redux-form';
 import {Treebeard, decorators, CategoryAdd, CategoryEdit, Property, Product} from 'components';
+
 @asyncConnect([{
   deferred: true,
   promise: ({store: {dispatch, getState}}) => {
     if (!isLoaded(getState())) {
-      debugger;
       return dispatch(loadCategories());
     }
   }
@@ -35,6 +35,7 @@ import {Treebeard, decorators, CategoryAdd, CategoryEdit, Property, Product} fro
   }),
   {...categoryActions, initializeWithKey, ...productsActions})
 
+
 export default
 class Categories extends Component {
   static propTypes = {
@@ -45,8 +46,8 @@ class Categories extends Component {
     editStartCategory: PropTypes.func.isRequired,
     deleteStartCategory: PropTypes.func.isRequired,
     loadProducts: PropTypes.func.isRequired,
-    categories: PropTypes.array.isRequired,
-    products: PropTypes.array.isRequired,
+    categories: PropTypes.array,
+    products: PropTypes.array,
     loading: PropTypes.bool.isRequired,
     load: PropTypes.func.isRequired,
     show: PropTypes.bool.isRequired,
@@ -86,8 +87,6 @@ class Categories extends Component {
     this.setState({categories: filtered});
   }
   render() {
-    debugger;
-
     const chosenNode = this.state.cursor;
     const { addCategoryBtn, categories, load, loading, show, editStartCategory, deleteStartCategory,
         addStartCategory, editCategoryBtn, changeShow, loadProducts, deleteCategory, deleteStopCategory,
